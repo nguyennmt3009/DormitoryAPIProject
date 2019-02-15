@@ -1,0 +1,14 @@
+E:\APIProject\DataAccess\bin\Debug\DataAccess.dll.config
+E:\APIProject\DataAccess\bin\Debug\DataAccess.dll
+E:\APIProject\DataAccess\bin\Debug\DataAccess.pdb
+E:\APIProject\DataAccess\bin\Debug\EntityFramework.dll
+E:\APIProject\DataAccess\bin\Debug\EntityFramework.SqlServer.dll
+E:\APIProject\DataAccess\bin\Debug\EntityFramework.xml
+E:\APIProject\DataAccess\bin\Debug\EntityFramework.SqlServer.xml
+E:\APIProject\DataAccess\obj\Debug\DataAccess.csprojAssemblyReference.cache
+E:\APIProject\DataAccess\obj\Debug\DataAccess.csproj.CoreCompileInputs.cache
+E:\APIProject\DataAccess\obj\Debug\DataAccess.csproj.CopyComplete
+E:\APIProject\DataAccess\obj\Debug\DataAccess.dll
+E:\APIProject\DataAccess\obj\Debug\DataAccess.pdb
+E:\APIProject\DataAccess\obj\Debug\DataAccess.Migrations.sad.resources
+E:\APIProject\DataAccess\obj\Debug\DataAccess.csproj.GenerateResource.cache
