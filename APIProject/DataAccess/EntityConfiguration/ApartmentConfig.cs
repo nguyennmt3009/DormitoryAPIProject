@@ -12,6 +12,7 @@
             Property(p => p.Location).IsMaxLength().IsUnicode().IsOptional();
             Property(p => p.Name).HasMaxLength(255).IsUnicode().IsOptional();
             Property(p => p.BrandId).IsRequired();
+            Property(p => p.AgencyId).IsOptional();
 
 
             // 1 - n Post
@@ -21,7 +22,7 @@
             HasRequired(a => a.Brand)
                 .WithMany(b => b.Apartments)
                 .HasForeignKey(a => a.BrandId)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete(true);
         }
     }
 }

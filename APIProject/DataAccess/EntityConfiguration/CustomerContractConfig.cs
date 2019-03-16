@@ -15,13 +15,13 @@
             HasRequired(cc => cc.Customer)
                 .WithMany(c => c.CustomerContracts)
                 .HasForeignKey(cc => cc.CustomerId)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete(true);
 
             // Contract 1 - n
             HasRequired(cc => cc.Contract)
                 .WithMany(c => c.CustomerContracts)
                 .HasForeignKey(cc => cc.ContractId)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete(true);
         }
     }
 }

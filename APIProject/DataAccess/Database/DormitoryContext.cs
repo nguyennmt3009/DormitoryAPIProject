@@ -4,7 +4,7 @@
     using DataAccess.EntityConfiguration;
     using System.Data.Entity;
 
-    public class DormitoryContext : DbContext
+    public class DormitoryContext : DbContext, IEntityContext
     {
 
         public DormitoryContext() : base("Dormitory") { }
@@ -18,10 +18,11 @@
         public DbSet<Customer> Customers { get; set; }
         public DbSet<CustomerContract> CustomerContracts { get; set; }
         public DbSet<Employee> Employees { get; set; }
-        public DbSet<Role> Roles { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<RoomType> RoomTypes { get; set; }
         public DbSet<Service> Services { get; set; }
+
+        public object GetContext => this;
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -31,7 +32,7 @@
                 .Add(new BillDetailConfig()).Add(new BrandConfig())
                 .Add(new BrandServiceConfig()).Add(new ContractConfig())
                 .Add(new CustomerConfig()).Add(new CustomerContractConfig())
-                .Add(new EmployeeConfig()).Add(new RoleConfig())
+                .Add(new EmployeeConfig())
                 .Add(new RoomConfig()).Add(new RoomTypeConfig())
                 .Add(new ServiceConfig());
         }

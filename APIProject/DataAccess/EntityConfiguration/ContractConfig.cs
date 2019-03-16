@@ -14,7 +14,8 @@
             Property(p => p.DueDate).IsOptional();
             Property(p => p.FromDate).IsOptional();
             Property(p => p.Status).IsOptional();
-            Property(p => p.Deposit).HasPrecision(12, 10).IsOptional();
+            Property(p => p.Deposit).HasPrecision(18, 10).IsOptional();
+            Property(p => p.DueAmount).HasPrecision(18, 10).IsOptional();
 
             // 1 - n CustomerContract
             // 1 - n Bill

@@ -10,6 +10,7 @@
         public DateTimeOffset FromDate { get; set; }
         public DateTimeOffset DueDate { get; set; }
         public decimal Deposit { get; set; } // Tien dat coc
+        public decimal DueAmount { get; set; } // Tien moi thang
         public bool Status { get; set; }
         public int RoomId { get; set; }
         public Room Room { get; set; }

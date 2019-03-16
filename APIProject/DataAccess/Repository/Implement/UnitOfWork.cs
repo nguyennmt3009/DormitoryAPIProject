@@ -12,9 +12,10 @@
         private IDictionary<Type, object> _repository;
         private bool IsDisposed = false;
 
-        public UnitOfWork()
+        public UnitOfWork(IEntityContext context)
         {
-            this._dbContext = new DormitoryContext();
+            this._dbContext = context.GetContext as DbContext;
+            //this._dbContext = new DormitoryContext();
             this._repository = new Dictionary<Type, object>();
         }
 

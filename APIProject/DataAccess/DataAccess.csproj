@@ -36,6 +36,12 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.2\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -48,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database\DormitoryContext.cs" />
+    <Compile Include="Database\IEntityContext.cs" />
     <Compile Include="Entities\Apartment.cs" />
     <Compile Include="Entities\Bill.cs" />
     <Compile Include="Entities\BillDetail.cs" />
@@ -57,7 +64,6 @@
     <Compile Include="Entities\Customer.cs" />
     <Compile Include="Entities\CustomerContract.cs" />
     <Compile Include="Entities\Employee.cs" />
-    <Compile Include="Entities\Role.cs" />
     <Compile Include="Entities\Room.cs" />
     <Compile Include="Entities\RoomType.cs" />
     <Compile Include="Entities\Service.cs" />
@@ -71,13 +77,36 @@
     <Compile Include="EntityConfiguration\CustomerConfig.cs" />
     <Compile Include="EntityConfiguration\CustomerContractConfig.cs" />
     <Compile Include="EntityConfiguration\EmployeeConfig.cs" />
-    <Compile Include="EntityConfiguration\RoleConfig.cs" />
     <Compile Include="EntityConfiguration\RoomConfig.cs" />
     <Compile Include="EntityConfiguration\RoomTypeConfig.cs" />
     <Compile Include="EntityConfiguration\ServiceConfig.cs" />
-    <Compile Include="Migrations\201902081032582_sad.cs" />
-    <Compile Include="Migrations\201902081032582_sad.Designer.cs">
-      <DependentUpon>201902081032582_sad.cs</DependentUpon>
+    <Compile Include="Migrations\201902241218488_init.cs" />
+    <Compile Include="Migrations\201902241218488_init.Designer.cs">
+      <DependentUpon>201902241218488_init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903051208361_property.cs" />
+    <Compile Include="Migrations\201903051208361_property.Designer.cs">
+      <DependentUpon>201903051208361_property.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903101608562_cascadeOnDelete.cs" />
+    <Compile Include="Migrations\201903101608562_cascadeOnDelete.Designer.cs">
+      <DependentUpon>201903101608562_cascadeOnDelete.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903111831556_fixsomelogic.cs" />
+    <Compile Include="Migrations\201903111831556_fixsomelogic.Designer.cs">
+      <DependentUpon>201903111831556_fixsomelogic.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903111845454_customerusername.cs" />
+    <Compile Include="Migrations\201903111845454_customerusername.Designer.cs">
+      <DependentUpon>201903111845454_customerusername.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903141201498_agencyApartment.cs" />
+    <Compile Include="Migrations\201903141201498_agencyApartment.Designer.cs">
+      <DependentUpon>201903141201498_agencyApartment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903150900345_isBuildingRentBillDetail.cs" />
+    <Compile Include="Migrations\201903150900345_isBuildingRentBillDetail.Designer.cs">
+      <DependentUpon>201903150900345_isBuildingRentBillDetail.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -91,10 +120,27 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201902081032582_sad.resx">
-      <DependentUpon>201902081032582_sad.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201902241218488_init.resx">
+      <DependentUpon>201902241218488_init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903051208361_property.resx">
+      <DependentUpon>201903051208361_property.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903101608562_cascadeOnDelete.resx">
+      <DependentUpon>201903101608562_cascadeOnDelete.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903111831556_fixsomelogic.resx">
+      <DependentUpon>201903111831556_fixsomelogic.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903111845454_customerusername.resx">
+      <DependentUpon>201903111845454_customerusername.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903141201498_agencyApartment.resx">
+      <DependentUpon>201903141201498_agencyApartment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903150900345_isBuildingRentBillDetail.resx">
+      <DependentUpon>201903150900345_isBuildingRentBillDetail.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

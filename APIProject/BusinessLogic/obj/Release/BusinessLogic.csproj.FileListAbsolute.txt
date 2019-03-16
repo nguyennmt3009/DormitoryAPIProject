@@ -1,0 +1,12 @@
+E:\APIProject\BusinessLogic\bin\Release\BusinessLogic.dll
+E:\APIProject\BusinessLogic\bin\Release\BusinessLogic.pdb
+E:\APIProject\BusinessLogic\bin\Release\DataAccess.dll
+E:\APIProject\BusinessLogic\bin\Release\EntityFramework.dll
+E:\APIProject\BusinessLogic\bin\Release\DataAccess.pdb
+E:\APIProject\BusinessLogic\bin\Release\DataAccess.dll.config
+E:\APIProject\BusinessLogic\bin\Release\EntityFramework.xml
+E:\APIProject\BusinessLogic\obj\Release\BusinessLogic.csprojAssemblyReference.cache
+E:\APIProject\BusinessLogic\obj\Release\BusinessLogic.csproj.CoreCompileInputs.cache
+E:\APIProject\BusinessLogic\obj\Release\BusinessLogic.csproj.CopyComplete
+E:\APIProject\BusinessLogic\obj\Release\BusinessLogic.dll
+E:\APIProject\BusinessLogic\obj\Release\BusinessLogic.pdb

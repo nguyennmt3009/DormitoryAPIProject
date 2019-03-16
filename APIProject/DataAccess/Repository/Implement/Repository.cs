@@ -43,7 +43,7 @@
             return currentSet;
         }
 
-        public T Get(Func<T, bool> predicated, params Expression<Func<T, object>>[] includes)
+        public T Get(Expression<Func<T, bool>> predicated, params Expression<Func<T, object>>[] includes)
             => this.GetAll(includes).FirstOrDefault(predicated);
 
         public IEnumerable<T> Search(Func<T, bool> predicated, params Expression<Func<T, object>>[] includes)
@@ -51,6 +51,6 @@
 
         public IEnumerable<TSelector> Select<TSelector>(Func<T, TSelector> selector, params Expression<Func<T, object>>[] includes)
         => this.GetAll(includes).Select(selector);
-
+        
     }
 }

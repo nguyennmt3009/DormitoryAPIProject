@@ -24,7 +24,7 @@
             HasRequired(r => r.Apartment)
                 .WithMany(a => a.Rooms)
                 .HasForeignKey(r => r.ApartmentId)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete(true);
         }
     }
 }

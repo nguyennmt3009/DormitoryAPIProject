@@ -15,7 +15,7 @@
 
         IQueryable<T> GetAll(params Expression<Func<T, object>>[] includes);
         
-        T Get(Func<T, bool> predicated, params Expression<Func<T, object>>[] includes);
+        T Get(Expression<Func<T, bool>> predicated, params Expression<Func<T, object>>[] includes);
 
         IEnumerable<T> Search(Func<T, bool> predicated, params Expression<Func<T, object>>[] includes);
 

@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="Dormitory-Web.config Connection String" description="Dormitory Connection String used in web.config by the application to access the database." defaultValue="Server=tcp:skyjar.database.windows.net,1433;Initial Catalog=DormitoryDatabase;Persist Security Info=False;User ID=skyjar;Password=Zing1801;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="E:\\APIProject\\DormitoryUI\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='Dormitory']/@connectionString" />
+  </parameter>
+</parameters>

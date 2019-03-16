@@ -1,6 +1,8 @@
 ﻿namespace BusinessLogic.Implement
 {
     using System;
+    using System.Linq;
+    using System.Linq.Expressions;
     using System.Transactions;
     using DataAccess.Repositories;
 
@@ -50,6 +52,7 @@
                 throw ex;
             }
         }
+        
 
         public virtual void Delete(T entity)
         {
@@ -68,5 +71,13 @@
                 throw ex;
             }
         }
+
+        public virtual T Get(Expression<Func<T, bool>> predict, params Expression<Func<T, object>>[] includes)
+            => this.iRepository.Get(predict, includes);
+
+        public virtual IQueryable<T> GetAll(params Expression<Func<T, object>>[] includes)
+            => this.iRepository.GetAll(includes);
+
+        
     }
 }

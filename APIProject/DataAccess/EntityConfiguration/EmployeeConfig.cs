@@ -12,19 +12,15 @@
             Property(p => p.Fullname).IsUnicode().HasMaxLength(255).IsOptional();
             Property(p => p.Phone).IsUnicode().HasMaxLength(255).IsOptional();
             Property(p => p.Email).IsUnicode().HasMaxLength(500).IsOptional();
-            Property(p => p.Birthdate).IsOptional();
+            Property(p => p.Role).IsUnicode().HasMaxLength(500).IsOptional();
+            Property(p => p.Username).IsUnicode().HasMaxLength(500).IsOptional();
 
-            // Role 1 - n
-            HasRequired(e => e.Role)
-                .WithMany(r => r.Employees)
-                .HasForeignKey(e => e.RoleId)
-                .WillCascadeOnDelete(false);
 
             // Brand 1 - n
-            HasRequired(e => e.Brand)
+            HasOptional(e => e.Brand)
                 .WithMany(r => r.Employees)
                 .HasForeignKey(e => e.BrandId)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete(true);
         }
     }
 }

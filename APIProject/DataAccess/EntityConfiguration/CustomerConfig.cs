@@ -13,6 +13,8 @@
             Property(p => p.Phone).IsUnicode().HasMaxLength(255).IsOptional();
             Property(p => p.Email).IsUnicode().HasMaxLength(500).IsOptional();
             Property(p => p.Birthdate).IsOptional();
+            Property(p => p.Sex).IsOptional();
+            Property(p => p.Username).IsUnicode().HasMaxLength(255).IsOptional();
 
             // 1 - n CustomerContract
         }

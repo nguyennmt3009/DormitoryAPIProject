@@ -42,9 +42,29 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Define\IApartmentService.cs" />
+    <Compile Include="Define\IBillDetailService.cs" />
+    <Compile Include="Define\IBillService.cs" />
+    <Compile Include="Define\IBrandService.cs" />
+    <Compile Include="Define\IBrandServiceService.cs" />
+    <Compile Include="Define\IContractService.cs" />
+    <Compile Include="Define\ICustomerContractService.cs" />
     <Compile Include="Define\ICustomerService.cs" />
+    <Compile Include="Define\IEmployeeService.cs" />
+    <Compile Include="Define\IRoomService.cs" />
+    <Compile Include="Define\IRoomTypeService.cs" />
+    <Compile Include="Define\IServiceService.cs" />
     <Compile Include="Implement\ApartmentService.cs" />
+    <Compile Include="Implement\BillDetailService.cs" />
+    <Compile Include="Implement\BillService.cs" />
+    <Compile Include="Implement\BrandService.cs" />
+    <Compile Include="Implement\BrandServiceService.cs" />
+    <Compile Include="Implement\ContractService.cs" />
+    <Compile Include="Implement\CustomerContractService.cs" />
     <Compile Include="Implement\CustomerService.cs" />
+    <Compile Include="Implement\EmployeeService.cs" />
+    <Compile Include="Implement\RoomService.cs" />
+    <Compile Include="Implement\RoomTypeService.cs" />
+    <Compile Include="Implement\ServiceService.cs" />
     <Compile Include="Implement\_BaseService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

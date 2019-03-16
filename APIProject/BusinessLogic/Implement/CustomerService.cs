@@ -10,19 +10,7 @@
         {
         }
 
-        public override void Create(Customer entity)
-        {
-            base.Create(entity);
-        }
+        public Customer Get(int id) => base.Get(c => c.Id == id);
 
-        public override void Delete(Customer entity)
-        {
-            base.Delete(entity);
-        }
-
-        public override void Update(Customer entity)
-        {
-            base.Update(entity);
-        }
     }
 }
