@@ -1,12 +1,17 @@
 ﻿using BusinessLogic.Define;
+using DataAccess.Database;
 using DataAccess.Entities;
 using DormitoryUI.ViewModels;
+using IdentityManager.Entities;
+using IdentityManager.IdentityService;
+using Microsoft.AspNet.Identity;
 using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace DormitoryUI.Controllers
@@ -17,9 +22,11 @@ namespace DormitoryUI.Controllers
     {
         public readonly IApartmentService _apartmentService;
         public readonly IBrandService _brandService;
+        public readonly AccountAdapter _accountService;
 
-        public ApartmentController(IApartmentService apartmentService, IBrandService brandService)
+        public ApartmentController(IEntityContext context, IApartmentService apartmentService, IBrandService brandService)
         {
+            _accountService = new AccountAdapter(context);
             _apartmentService = apartmentService;
             _brandService = brandService;
         }
@@ -44,16 +51,28 @@ namespace DormitoryUI.Controllers
 
         [HttpGet]
         [Route("all-apartment")]
-        public IHttpActionResult GetAll()
+        [Authorize]
+        public async Task<IHttpActionResult> GetAll()
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest();
+
+                if (User.IsInRole(AccountType.EMPLOYEE.ToString()))
+                    return Unauthorized();
+
+                List<Apartment> result = null;
+                if (User.IsInRole(AccountType.ADMINISTRATOR.ToString()))
+                {
+                    result = _apartmentService.GetAll(_ => _.Rooms, _ => _.RoomTypes, _ => _.Brand).ToList();
+                } else 
+                {
+                    var emp = await _accountService.GetEmployeeByAccount(User.Identity.GetUserId());
+                    result = _apartmentService.GetAll(_ => _.Rooms, _ => _.RoomTypes)
+                        .Where(_ => _.BrandId == emp.BrandId).ToList();
+                }
                 
-                var result = _apartmentService.GetAll(_ => _.Rooms, _ => _.RoomTypes).ToList();
-
-
                 return Ok(result);
             }
             catch (Exception e)
@@ -86,6 +105,30 @@ namespace DormitoryUI.Controllers
             {
                 return InternalServerError(e);
             }
+        }
+
+        [HttpDelete]
+        [Route("")]
+        public IHttpActionResult DeleteApartment(int id)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+                var a = _apartmentService.Get(_ => _.Id == id);
+                if (a == null)
+                {
+                    return BadRequest("Apartmnent not found");
+                }
+
+                _apartmentService.Delete(a);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+
         }
 
         [HttpPost]

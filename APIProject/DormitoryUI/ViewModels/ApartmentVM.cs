@@ -17,6 +17,8 @@ namespace DormitoryUI.ViewModels
         public string Location { get; set; }
         [Required]
         public int BrandId { get; set; }
+        
+        public int? AgencyId { get; set; }
     }
 
     public class ApartmentUpdateVM

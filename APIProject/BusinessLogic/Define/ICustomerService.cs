@@ -11,6 +11,8 @@
         void Update(Customer entity);
         void Delete(Customer entity);
         Customer Get(Expression<Func<Customer, bool>> predict, params Expression<Func<Customer, object>>[] includes);
+
+        int GetBrandId(int id);
         IQueryable<Customer> GetAll(params Expression<Func<Customer, object>>[] includes);
         Customer Get(int keyValue);
     }

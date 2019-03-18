@@ -10,7 +10,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -151,11 +150,12 @@ namespace IdentityManager.IdentityService
                         UserName = username,
                     };
 
-                    switch(roleType)
+                    switch (roleType)
                     {
                         case AccountType.ADMINISTRATOR:
                         case AccountType.EMPLOYEE:
-                            Employee employee = new Employee() {
+                            Employee employee = new Employee()
+                            {
                                 Username = username,
                                 Role = roleType.ToString()
                             };
@@ -192,7 +192,56 @@ namespace IdentityManager.IdentityService
                         {
                             await _accountService.AddToRoleAsync(currentUser.Id, roleName);
                         }
-                        
+
+                    }
+                    scope.Complete();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+
+            return infor;
+        }
+
+
+        public async Task<IdentityInfor> RegisterCustomer(int customerId, string username)
+        {
+            IdentityInfor infor = new IdentityInfor();
+
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required,
+                TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    Account account = new Account
+                    {
+                        UserName = username,
+                        UserDormitoryId = customerId
+                    };
+
+                    IdentityResult createUser = await _accountService.CreateAsync(account, "123456");
+
+                    if (!createUser.Succeeded)
+                        infor.Errors.AddRange(createUser.Errors);
+                    else
+                    {
+                        string roleName = AccountType.CUSTOMER.ToString();
+                        if (!_roleService.RoleExists(roleName))
+                        {
+                            IdentityResult createRole = await this._roleService.CreateAsync(new Role { Name = roleName });
+
+                            if (!createRole.Succeeded)
+                                infor.Errors.AddRange(createRole.Errors);
+                        }
+
+                        Account currentUser = await _accountService.FindByNameAsync(username);
+                        if (!_accountService.IsInRole(currentUser.Id, roleName))
+                        {
+                            await _accountService.AddToRoleAsync(currentUser.Id, roleName);
+                        }
+
                     }
                     scope.Complete();
                 }

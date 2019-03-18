@@ -14,6 +14,7 @@
                 Name = viewModel.Name,
                 Location = viewModel.Location,
                 BrandId = viewModel.BrandId,
+                AgencyId = viewModel.AgencyId
             };
 
         public ApartmentVM ConvertToViewModel(Apartment model)
@@ -255,7 +256,7 @@
         public Customer ConvertToModel(CustomerCreateVM viewModel)
             => new Customer
             {
-                Fullname = viewModel.Fullname,
+                Fullname = viewModel.LastName + " " + viewModel.FirstName,
                 Phone = viewModel.Phone,
                 Birthdate = viewModel.Birthdate,
                 Sex = viewModel.Sex,
@@ -273,7 +274,19 @@
                 Email = viewModel.Email,
             };
 
+        public CustomerGetVM ConvertToViewModel(Customer model)
+            => new CustomerGetVM
+            {
+                Id = model.Id,
+                Birthdate = model.Birthdate.ToString("dd-MM-yyyy"),
+                Email = model.Email,
+                Fullname = model.Fullname,
+                Phone = model.Phone,
+                Sex = model.Sex
+            };
 
+        public ICollection<CustomerGetVM> ConvertToViewModel(ICollection<Customer> models)
+            => models.Select(_ => ConvertToViewModel(_)).ToList();
         #endregion
 
         #region CustomerContract

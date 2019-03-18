@@ -13,5 +13,6 @@ namespace DormitoryUI.ViewModels
         public string Email { get; set; }
         public int BrandId { get; set; }
     }
+
     
 }

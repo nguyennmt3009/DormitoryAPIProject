@@ -1,10 +1,13 @@
 ﻿using BusinessLogic.Define;
 using DataAccess.Database;
+using DataAccess.Entities;
+using DormitoryUI.ViewModels;
 using IdentityManager.Entities;
 using IdentityManager.IdentityService;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -12,20 +15,25 @@ namespace DormitoryUI.Controllers
 {
     //[Authorize(Roles = "Administrator")]
     [RoutePrefix("account")]
-    public class AccountController : ApiController
+    public class AccountController : BaseController
     {
         private AccountAdapter _accountAdapter;
         public ICustomerService _customerService;
         public IBrandService _brandService;
         public IEmployeeService _employeeService;
+        public ICustomerContractService _customerContractService;
+        public IContractService _contractService;
 
         public AccountController(IEntityContext context, ICustomerService customerService, 
-            IBrandService brandService, IEmployeeService employeeService)
+            IBrandService brandService, IEmployeeService employeeService,
+            ICustomerContractService customerContractService, IContractService contractService)
         {
             _accountAdapter = new AccountAdapter(context);
             _customerService = customerService;
             _brandService = brandService;
             _employeeService = employeeService;
+            _customerContractService = customerContractService;
+            _contractService = contractService;
         }
 
         
@@ -111,18 +119,45 @@ namespace DormitoryUI.Controllers
         }
 
 
-        //[Authorize(Roles = nameof(AccountType.ADMINISTRATOR))]
-        /// <summary>
-        ///  Để tạo account đăng nhập. đầy đủ 3 role nha. 
-        /// </summary>
-        /// <remarks>
-        /// For ADMINISTRATOR to add account, see AccountType :
-        ///  ADMINISTRATOR = 0,
-        ///  EMPLOYEE = 1,
-        ///  CUSTOMER = 2
-        /// </remarks>
-        /// <param name="models.accountType"></param>
-        /// <returns></returns>
+        [HttpPost, Route("customer")]
+        public async Task<IHttpActionResult> CreateCustomer(CustomerCreateVM viewModel)
+        {
+            try
+            {
+                if (!ModelState.IsValid) return BadRequest("Invalid model");
+
+                var contract = _contractService.Get(z => z.Id == viewModel.ContractId);
+                if (contract == null) return BadRequest("Contract not found");
+
+                Customer customer = ModelMapper.ConvertToModel(viewModel);
+                _customerService.Create(customer);
+
+                _customerContractService.Create(new CustomerContract
+                {
+                    ContractId = contract.Id,
+                    CustomerId = customer.Id
+                });
+
+                var username = NonUnicode(viewModel.FirstName);
+                IdentityInfor infor = await _accountAdapter.RegisterCustomer(customer.Id, username);
+
+                if (infor.IsError)
+                {
+                    foreach (var error in infor.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, new Exception(error));
+                    }
+                    return BadRequest(ModelState);
+                }
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+        
         [HttpPost, Route("register")]
         public async Task<IHttpActionResult> Register(RegisterViewModel models)
         {
@@ -171,6 +206,31 @@ namespace DormitoryUI.Controllers
         //        return InternalServerError(ex);
         //    }
         //}
+
+        private string NonUnicode(string text)
+        {
+            text = Regex.Replace(text, @"\s+", "").ToLower();
+            string[] arr1 = new string[] { "á", "à", "ả", "ã", "ạ", "â", "ấ", "ầ", "ẩ", "ẫ", "ậ", "ă", "ắ", "ằ", "ẳ", "ẵ", "ặ",
+            "đ",
+            "é","è","ẻ","ẽ","ẹ","ê","ế","ề","ể","ễ","ệ",
+            "í","ì","ỉ","ĩ","ị",
+            "ó","ò","ỏ","õ","ọ","ô","ố","ồ","ổ","ỗ","ộ","ơ","ớ","ờ","ở","ỡ","ợ",
+            "ú","ù","ủ","ũ","ụ","ư","ứ","ừ","ử","ữ","ự",
+            "ý","ỳ","ỷ","ỹ","ỵ",};
+            string[] arr2 = new string[] { "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a",
+            "d",
+            "e","e","e","e","e","e","e","e","e","e","e",
+            "i","i","i","i","i",
+            "o","o","o","o","o","o","o","o","o","o","o","o","o","o","o","o","o",
+            "u","u","u","u","u","u","u","u","u","u","u",
+            "y","y","y","y","y",};
+            for (int i = 0; i < arr1.Length; i++)
+            {
+                text = text.Replace(arr1[i], arr2[i]);
+                text = text.Replace(arr1[i].ToUpper(), arr2[i].ToUpper());
+            }
+            return text;
+        }
     }
 
 
@@ -191,4 +251,6 @@ namespace DormitoryUI.Controllers
 
         public string NewPassword { get; set; }
     }
+
+   
 }

@@ -8,5 +8,7 @@ namespace DormitoryUI.Controllers
         private _ModelMapping _modelMapper;
 
         public _ModelMapping ModelMapper => _modelMapper ?? (_modelMapper = new _ModelMapping());
+
+
     }
 }

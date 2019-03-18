@@ -10,3 +10,15 @@ E:\APIProject\BusinessLogic\obj\Release\BusinessLogic.csproj.CoreCompileInputs.c
 E:\APIProject\BusinessLogic\obj\Release\BusinessLogic.csproj.CopyComplete
 E:\APIProject\BusinessLogic\obj\Release\BusinessLogic.dll
 E:\APIProject\BusinessLogic\obj\Release\BusinessLogic.pdb
+E:\GitHub\DormitoryAPIProject\APIProject\BusinessLogic\bin\Release\BusinessLogic.dll
+E:\GitHub\DormitoryAPIProject\APIProject\BusinessLogic\bin\Release\BusinessLogic.pdb
+E:\GitHub\DormitoryAPIProject\APIProject\BusinessLogic\bin\Release\DataAccess.dll
+E:\GitHub\DormitoryAPIProject\APIProject\BusinessLogic\bin\Release\EntityFramework.dll
+E:\GitHub\DormitoryAPIProject\APIProject\BusinessLogic\bin\Release\DataAccess.pdb
+E:\GitHub\DormitoryAPIProject\APIProject\BusinessLogic\bin\Release\DataAccess.dll.config
+E:\GitHub\DormitoryAPIProject\APIProject\BusinessLogic\bin\Release\EntityFramework.xml
+E:\GitHub\DormitoryAPIProject\APIProject\BusinessLogic\obj\Release\BusinessLogic.csprojAssemblyReference.cache
+E:\GitHub\DormitoryAPIProject\APIProject\BusinessLogic\obj\Release\BusinessLogic.csproj.CoreCompileInputs.cache
+E:\GitHub\DormitoryAPIProject\APIProject\BusinessLogic\obj\Release\BusinessLogic.csproj.CopyComplete
+E:\GitHub\DormitoryAPIProject\APIProject\BusinessLogic\obj\Release\BusinessLogic.dll
+E:\GitHub\DormitoryAPIProject\APIProject\BusinessLogic\obj\Release\BusinessLogic.pdb

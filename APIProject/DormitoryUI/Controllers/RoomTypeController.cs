@@ -1,10 +1,16 @@
 ﻿using BusinessLogic.Define;
+using DataAccess.Database;
+using DataAccess.Entities;
 using DormitoryUI.ViewModels;
+using IdentityManager.Entities;
+using IdentityManager.IdentityService;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace DormitoryUI.Controllers
@@ -14,9 +20,11 @@ namespace DormitoryUI.Controllers
     public class RoomTypeController : BaseController
     {
         public readonly IRoomTypeService _roomTypeService;
+        public readonly AccountAdapter _accountService;
 
-        public RoomTypeController(IRoomTypeService roomTypeService)
+        public RoomTypeController(IEntityContext context, IRoomTypeService roomTypeService)
         {
+            _accountService = new AccountAdapter(context);
             _roomTypeService = roomTypeService;
         }
 
@@ -29,6 +37,28 @@ namespace DormitoryUI.Controllers
                     return BadRequest();
 
                 _roomTypeService.Create(ModelMapper.ConvertToModel(viewModel));
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
+        [HttpDelete, Route("")]
+        public IHttpActionResult Delete(int id)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                var result = _roomTypeService.Get(_ => _.Id == id);
+                if (result == null) return BadRequest("Room type not found");
+
+                _roomTypeService.Delete(result);
+
 
                 return Ok();
             }
@@ -97,16 +127,27 @@ namespace DormitoryUI.Controllers
 
 
         [HttpGet, Route("all-roomtype")]
-        public IHttpActionResult GetAll()
+        [Authorize]
+        public async Task<IHttpActionResult> GetAll()
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest();
 
-                var result = _roomTypeService.GetAll();
+                List<RoomType> roomTypes;
 
-                return Ok(result);
+                if (User.IsInRole(AccountType.ADMINISTRATOR.ToString()))
+                {
+                    roomTypes = _roomTypeService.GetAll(_ => _.Apartment).ToList();
+                }
+                else
+                {
+                    var emp = await _accountService.GetEmployeeByAccount(User.Identity.GetUserId());
+                    roomTypes = _roomTypeService.GetAll(_ => _.Apartment)
+                        .Where(_ => _.Apartment.BrandId == emp.BrandId).ToList();
+                }
+                return Ok(roomTypes);
             }
             catch (Exception e)
             {

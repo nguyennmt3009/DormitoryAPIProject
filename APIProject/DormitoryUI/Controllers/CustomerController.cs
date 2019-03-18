@@ -1,10 +1,16 @@
 ﻿using BusinessLogic.Define;
+using DataAccess.Database;
+using DataAccess.Entities;
 using DormitoryUI.ViewModels;
+using IdentityManager.Entities;
+using IdentityManager.IdentityService;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace DormitoryUI.Controllers
@@ -16,9 +22,12 @@ namespace DormitoryUI.Controllers
         public readonly IContractService _contractService;
         public readonly IRoomService _roomService;
 
-        public CustomerController(ICustomerService customerService, 
+        public readonly AccountAdapter _accountService;
+
+        public CustomerController(IEntityContext context, ICustomerService customerService, 
             IContractService contractService, IRoomService roomService)
         {
+            _accountService = new AccountAdapter(context);
             _customerService = customerService;
             _contractService = contractService;
             _roomService = roomService;
@@ -35,7 +44,7 @@ namespace DormitoryUI.Controllers
                     return BadRequest();
 
                 var result = _customerService.Get(_ => _.Id == id);
-
+                if (result == null) return BadRequest("Customer not found");
                 return Ok(result);
             }
             catch (Exception e)
@@ -68,17 +77,38 @@ namespace DormitoryUI.Controllers
             }
         }
 
-        [HttpPost, Route("")]
-        public IHttpActionResult Create(CustomerCreateVM viewModel)
+        //[HttpPost, Route("")]
+        //public IHttpActionResult Create(CustomerCreateVM viewModel)
+        //{
+        //    try
+        //    {
+        //        if (!ModelState.IsValid)
+        //            return BadRequest();
+
+        //        _customerService.Create(ModelMapper.ConvertToModel(viewModel));
+
+        //        return Ok();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return InternalServerError(e);
+        //    }
+        //}
+
+        [HttpGet, Route("all-brand-customer")]
+        public IHttpActionResult GetAll(int brandId)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest();
 
-                _customerService.Create(ModelMapper.ConvertToModel(viewModel));
+                var result = _customerService.GetAll(_ => _.CustomerContracts.Select(__ => __.Contract.Room.Apartment))
+                    .Where(_ => _.CustomerContracts.FirstOrDefault().Contract.Room.Apartment.BrandId == brandId);
 
-                return Ok();
+
+
+                return Ok(result);
             }
             catch (Exception e)
             {
@@ -87,16 +117,32 @@ namespace DormitoryUI.Controllers
         }
 
         [HttpGet, Route("all-customer")]
-        public IHttpActionResult GetAll()
+        [Authorize]
+        public async Task<IHttpActionResult> GetAll()
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest();
 
-                var result = _customerService.GetAll();
+                if (User.IsInRole(AccountType.EMPLOYEE.ToString()))
+                    return Unauthorized();
 
-                return Ok(result);
+                List<Customer> result = null;
+                if (User.IsInRole(AccountType.ADMINISTRATOR.ToString()))
+                {
+                    result = _customerService.GetAll().ToList();
+                }
+                else
+                {
+                    var emp = await _accountService.GetEmployeeByAccount(User.Identity.GetUserId());
+                    result = _customerService.GetAll(_ => _.CustomerContracts.Select(z => z.Contract
+                    .Room.Apartment))
+                        .Where(_ => _.CustomerContracts.FirstOrDefault()
+                        .Contract.Room.Apartment.BrandId == emp.BrandId).ToList();
+                }
+
+                return Ok(ModelMapper.ConvertToViewModel(result));
             }
             catch (Exception e)
             {
