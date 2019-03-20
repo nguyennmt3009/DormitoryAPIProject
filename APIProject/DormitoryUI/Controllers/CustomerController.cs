@@ -77,16 +77,16 @@ namespace DormitoryUI.Controllers
             }
         }
 
-        //[HttpPost, Route("")]
-        //public IHttpActionResult Create(CustomerCreateVM viewModel)
+        //[HttpDelete, Route("")]
+        //public IHttpActionResult Delete(int customerId)
         //{
         //    try
         //    {
         //        if (!ModelState.IsValid)
         //            return BadRequest();
 
-        //        _customerService.Create(ModelMapper.ConvertToModel(viewModel));
-
+        //        var c = _customerService.Get(_ => _.Id == customerId);
+        //        _customerService.Delete(c);
         //        return Ok();
         //    }
         //    catch (Exception e)
@@ -104,11 +104,11 @@ namespace DormitoryUI.Controllers
                     return BadRequest();
 
                 var result = _customerService.GetAll(_ => _.CustomerContracts.Select(__ => __.Contract.Room.Apartment))
-                    .Where(_ => _.CustomerContracts.FirstOrDefault().Contract.Room.Apartment.BrandId == brandId);
+                    .Where(_ => _.CustomerContracts.FirstOrDefault().Contract.Room.Apartment.BrandId == brandId).ToList();
 
 
 
-                return Ok(result);
+                return Ok(ModelMapper.ConvertToViewModel(result));
             }
             catch (Exception e)
             {
@@ -158,7 +158,16 @@ namespace DormitoryUI.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest();
 
-                _customerService.Update(ModelMapper.ConvertToModel(viewModel));
+                var customer = _customerService.Get(_ => _.Id == viewModel.Id);
+                if (customer == null) return BadRequest("Customer not found");
+
+                customer.Fullname = viewModel.Fullname;
+                customer.Phone = viewModel.Phone;
+                customer.Birthdate = viewModel.Birthdate; ;
+                customer.Sex = viewModel.Sex;
+                customer.Email = viewModel.Email;
+
+                _customerService.Update(customer);
 
                 return Ok();
             }

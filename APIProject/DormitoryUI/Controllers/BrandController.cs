@@ -76,7 +76,16 @@ namespace DormitoryUI.Controllers
         {
             try
             {
-                _brandService.Update(ModelMapper.ConvertToModel(viewModel));
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                var brand = _brandService.Get(_ => _.Id == viewModel.Id);
+                if (brand == null) return BadRequest("Brand not found");
+
+                brand.Name = viewModel.Name;
+
+                _brandService.Update(brand);
+                
                 return Ok();
             }
             catch (Exception e)

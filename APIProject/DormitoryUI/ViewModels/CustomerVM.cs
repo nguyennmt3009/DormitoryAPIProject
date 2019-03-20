@@ -5,11 +5,9 @@ namespace DormitoryUI.ViewModels
 {
     public class CustomerCreateVM
     {
-        [Required, StringLength(50, ErrorMessage = "Sai ten roi kia ma", MinimumLength = 2)]
         public string LastName { get; set; }
         [Required, StringLength(50, ErrorMessage = "Sai ten roi kia ma", MinimumLength = 2)]
         public string FirstName { get; set; }
-        [Required, EmailAddress]
         public string Email { get; set; }
         [Required, Phone]
         public string Phone { get; set; }
@@ -41,6 +39,7 @@ namespace DormitoryUI.ViewModels
         public string Phone { get; set; }
         public string Birthdate { get; set; }
         public string Sex { get; set; }
+        public string Username { get; set; }
 
     }
 

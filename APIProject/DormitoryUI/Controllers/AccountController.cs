@@ -118,6 +118,8 @@ namespace DormitoryUI.Controllers
             }
         }
 
+        
+
 
         [HttpPost, Route("customer")]
         public async Task<IHttpActionResult> CreateCustomer(CustomerCreateVM viewModel)
@@ -129,16 +131,18 @@ namespace DormitoryUI.Controllers
                 var contract = _contractService.Get(z => z.Id == viewModel.ContractId);
                 if (contract == null) return BadRequest("Contract not found");
 
+                var username = NonUnicode(viewModel.FirstName);
                 Customer customer = ModelMapper.ConvertToModel(viewModel);
                 _customerService.Create(customer);
 
+                customer.Username = username + customer.Id;
+                _customerService.Update(customer);
                 _customerContractService.Create(new CustomerContract
                 {
                     ContractId = contract.Id,
                     CustomerId = customer.Id
                 });
 
-                var username = NonUnicode(viewModel.FirstName);
                 IdentityInfor infor = await _accountAdapter.RegisterCustomer(customer.Id, username);
 
                 if (infor.IsError)
@@ -150,7 +154,7 @@ namespace DormitoryUI.Controllers
                     return BadRequest(ModelState);
                 }
 
-                return Ok();
+                return Ok(ModelMapper.ConvertToViewModel(customer));
             }
             catch (Exception e)
             {
@@ -181,6 +185,26 @@ namespace DormitoryUI.Controllers
             }
         }
 
+        [HttpDelete, Route("customer")]
+        public IHttpActionResult deleteCustomer(int customerId)
+        {
+            try
+            {
+                if (!ModelState.IsValid) return BadRequest("Invalid model");
+
+                var customer = _customerService.Get(_ => _.Id == customerId);
+                if (customer == null) return BadRequest("Customer not found");
+
+                _customerService.Delete(customer);
+                _accountAdapter.DeleteCustomer(customerId);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
 
         //[Authorize(Roles = nameof(AccountType.ADMINISTRATOR))]
         //[HttpPost]

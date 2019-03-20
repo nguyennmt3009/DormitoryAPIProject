@@ -58,10 +58,6 @@ namespace DormitoryUI.Controllers
             {
                 if (!ModelState.IsValid)
                     return BadRequest();
-
-                if (User.IsInRole(AccountType.EMPLOYEE.ToString()))
-                    return Unauthorized();
-
                 List<Apartment> result = null;
                 if (User.IsInRole(AccountType.ADMINISTRATOR.ToString()))
                 {

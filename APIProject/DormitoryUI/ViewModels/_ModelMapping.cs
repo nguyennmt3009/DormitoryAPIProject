@@ -282,7 +282,8 @@
                 Email = model.Email,
                 Fullname = model.Fullname,
                 Phone = model.Phone,
-                Sex = model.Sex
+                Sex = model.Sex,
+                Username = model.Username
             };
 
         public ICollection<CustomerGetVM> ConvertToViewModel(ICollection<Customer> models)

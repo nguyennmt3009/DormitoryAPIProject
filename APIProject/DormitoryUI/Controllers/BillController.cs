@@ -144,6 +144,7 @@ namespace DormitoryUI.Controllers
                 HttpResponseMessage respone = await client.GetAsync("customer?customer_id=" + customerId);
                 PhuongTransactionData data = await respone.Content.ReadAsAsync<PhuongTransactionData>();
 
+                if (data.data == null) return BadRequest("Tài khoản không tồn tại");
 
                 var bill = _billService.Get(_ => _.Id == billId);
                 if (bill == null) return BadRequest("Bill not found"); 

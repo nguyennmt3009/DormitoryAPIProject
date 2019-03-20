@@ -162,7 +162,6 @@
     <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\RoomTypeController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="NinjectConfig\BusinessConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Provider\CustomOAuthServer.cs" />

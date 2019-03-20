@@ -36,6 +36,12 @@ namespace IdentityManager.IdentityService
             this._employeeService = new EmployeeService(_unitOfWork);
         }
 
+        public void DeleteCustomer(int customerId)
+        {
+            var account = _accountService.Users.FirstOrDefault(_ => _.UserDormitoryId == customerId);
+            _accountService.Delete(account);
+        }
+
         public async Task<int> GetCustomerByAccount(string id)
         {
             var customerId = (await _accountService.FindByIdAsync(id)).UserDormitoryId ?? -1;
@@ -215,6 +221,7 @@ namespace IdentityManager.IdentityService
             {
                 try
                 {
+                    username = username + customerId;
                     Account account = new Account
                     {
                         UserName = username,
