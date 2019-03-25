@@ -19,6 +19,19 @@
         public DateTimeOffset ToDate { get; set; }
     }
 
+    public class BillGetVM
+    {
+        public int Id { get; set; }
+        public RoomGetVM Room { get; set; }
+        public ApartmentGetVM Apartment { get; set; }
+        public bool Status { get; set; }
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
+        public string CreatedDate { get; set; }
+        public decimal TotalAmount { get; set; }
+        public ICollection<BillDetailGetVM> BillDetails { get; set; }
+    }
+
     public class BillCustomerGetVM
     {
         public int Id { get; set; }

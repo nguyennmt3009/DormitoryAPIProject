@@ -114,18 +114,24 @@ namespace DormitoryUI.Controllers
                     {
                         roomId = 1;
                     }
-                    
+
                     result.Add(new
                     {
-                        apartmentId = apartment.Id,
-                        apartmentName = apartment.Name,
+                        apartment = new
+                        {
+                            id = apartment.Id,
+                            name = apartment.Name
+                        },
                         roomName = _roomService.Get(_ => _.Id == roomId).Name,
                         serviceName = item.service_name,
                         serviceItemName = item.service_item_name,
                         description = item.request_description,
                         createdDate = item.create_date,
-                        status = item.request_status_value,
-                        statusName = item.request_status
+                        status = new
+                        {
+                            id = item.request_status_value,
+                            name = item.request_status
+                        }
                     });
                 }
 

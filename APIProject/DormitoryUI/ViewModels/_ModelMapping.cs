@@ -8,6 +8,15 @@
     public class _ModelMapping
     {
         #region Apartment
+        public ApartmentGetVM ConvertToViewModelAdmin(Apartment model)
+            => new ApartmentGetVM
+            {
+                Id = model.Id,
+                Name = model.Name
+            };
+
+        public ICollection<ApartmentGetVM> ConvertToViewModel(ICollection<Apartment> model)
+        => model.Select(_ => ConvertToViewModelAdmin(_)).ToList();
         public Apartment ConvertToModel(ApartmentCreateVM viewModel)
             => new Apartment
             {
@@ -51,10 +60,18 @@
         #endregion
 
         #region BrandService
+
+        public BrandServiceGetVM ConvertToViewModel(BrandService model)
+            => model == null ? null : new BrandServiceGetVM
+            {
+                Id = model.Id,
+                Description = model.Description,
+                Price = model.Price,
+                ServiceName = model.Service.Name
+            };
         public BrandService ConvertToModel(BrandServiceCreateVM viewModel)
             => new BrandService
             {
-                BrandId = viewModel.BrandId,
                 Price = viewModel.Price,
                 ServiceId = viewModel.ServiceId,
                 Description = viewModel.Description
@@ -63,9 +80,7 @@
             => new BrandService
             {
                 Id = viewModel.Id,
-                BrandId = viewModel.BrandId,
                 Price = viewModel.Price,
-                ServiceId = viewModel.ServiceId,
                 Description = viewModel.Description
             };
         #endregion
@@ -83,6 +98,16 @@
         #endregion
 
         #region Room
+        public RoomGetVM ConvertToViewModelAdmin(Room model)
+            => new RoomGetVM
+            {
+                Id = model.Id,
+                Name = model.Name
+            };
+
+        public ICollection<RoomGetVM> ConvertToViewModel(ICollection<Room> models)
+            => models.Select(_ => ConvertToViewModelAdmin(_)).ToList();
+
         public Room ConvertToModel(RoomCreateVM viewModel)
             => new Room
             {
@@ -148,10 +173,25 @@
         #endregion
 
         #region Bill
+        public ICollection<BillGetVM> ConvertToViewModel(ICollection<Bill> models)
+            => models.Select(_ => ConvertToViewModel(_)).ToList();
+        public BillGetVM ConvertToViewModel(Bill model)
+            => new BillGetVM
+            {
+                Id = model.Id,
+                Apartment = ConvertToViewModelAdmin(model.Contract.Room.Apartment),
+                Room = ConvertToViewModelAdmin(model.Contract.Room),
+                Status = model.Status,
+                CreatedDate = model.CreatedDate.ToString("dd-MM-yyyy"),
+                FromDate = model.FromDate.ToString("dd-MM-yyyy"),
+                ToDate = model.ToDate.ToString("dd-MM-yyyy"),
+                TotalAmount = model.TotalAmount,
+                BillDetails = ConvertToViewModel(model.BillDetails)
+            };
         public ICollection<BillCustomerGetVM> ConvertToViewModel1(List<Bill> bills)
-            => bills.Select(_ => ConvertToViewModel(_)).ToList();
+            => bills.Select(_ => ConvertToViewModelCustomer(_)).ToList();
 
-        public BillCustomerGetVM ConvertToViewModel(Bill model)
+        public BillCustomerGetVM ConvertToViewModelCustomer(Bill model)
         => new BillCustomerGetVM
         {
             Id = model.Id,
@@ -161,7 +201,7 @@
             CreatedDate = model.CreatedDate.ToString("dd/MM/yyyy"),
             Month = model.FromDate.ToString("dd/MM/yyyy") + " - " + model.ToDate.ToString("dd/MM/yyyy"),
             Status = model.Status? "Đã thanh toán": "Chưa thanh toán",
-            BillDetails = ConvertToViewModel(model.BillDetails)
+            BillDetails = ConvertToViewModelCustomer(model.BillDetails)
         };
 
         public Bill ConvertToModel(BillCreateVM viewModel)
@@ -188,10 +228,23 @@
         #endregion
 
         #region BillDetail
-        public ICollection<BillDetailCustomerGetVM> ConvertToViewModel(ICollection<BillDetail> models)
-        => models.Select(_ => ConvertToViewModel(_)).ToList();
+        public ICollection<BillDetailGetVM> ConvertToViewModel(ICollection<BillDetail> models)
+            => models.Select(_ => ConvertToViewModel(_)).ToList();
+        public BillDetailGetVM ConvertToViewModel(BillDetail model)
+            => new BillDetailGetVM
+            {
+                Id = model.Id,
+                CreatedDate = model.CreatedDate.ToString("dd-MM-yyyy"),
+                Price = model.Price,
+                Quantity = model.Quantity,
+                IsBuildingRent = model.IsBuildingRent,
+                BrandServiceId = model.BrandServiceId,
+                BrandService = ConvertToViewModel(model.BrandService)
+            };
+        public ICollection<BillDetailCustomerGetVM> ConvertToViewModelCustomer(ICollection<BillDetail> models)
+        => models.Select(_ => ConvertToViewModelCustomer(_)).ToList();
 
-        public BillDetailCustomerGetVM ConvertToViewModel(BillDetail model)
+        public BillDetailCustomerGetVM ConvertToViewModelCustomer(BillDetail model)
         => new BillDetailCustomerGetVM
         {
             Name = model.IsBuildingRent? "Tiền nhà" : model.BrandService.Service.Name,
@@ -215,8 +268,6 @@
                 Id = viewModel.Id,
                 Quantity = viewModel.Quantity,
                 Price = viewModel.Price,
-                BillId = viewModel.BillId,
-                BrandServiceId = viewModel.BrandServiceId
             };
 
 
@@ -253,6 +304,7 @@
         #endregion
 
         #region Customer
+
         public Customer ConvertToModel(CustomerCreateVM viewModel)
             => new Customer
             {

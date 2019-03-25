@@ -1,6 +1,10 @@
 ﻿using BusinessLogic.Define;
+using DataAccess.Database;
 using DataAccess.Entities;
 using DormitoryUI.ViewModels;
+using IdentityManager.Entities;
+using IdentityManager.IdentityService;
+using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -24,13 +28,16 @@ namespace DormitoryUI.Controllers
         public readonly IBillDetailService _billDetailService;
         public readonly ICustomerService _customerService;
         protected HttpClient client;
-        public BillController(IBillService billService, IContractService contractService, 
+        public readonly AccountAdapter _accountService;
+
+        public BillController(IEntityContext context, IBillService billService, IContractService contractService, 
             IBillDetailService billDetailService, ICustomerService customerService)
         {
             _billService = billService;
             _contractService = contractService;
             _billDetailService = billDetailService;
             _customerService = customerService;
+            _accountService = new AccountAdapter(context);
 
             //----- get api
             client = new HttpClient();
@@ -74,7 +81,7 @@ namespace DormitoryUI.Controllers
                 _billService.Create(bill);
                 var dueAmount = _contractService.Get(_ => _.Id == bill.ContractId).DueAmount;
 
-                _billDetailService.Create(new DataAccess.Entities.BillDetail
+                _billDetailService.Create(new BillDetail
                 {
                     BillId = bill.Id,
                     CreatedDate = DateTimeOffset.Now,
@@ -95,16 +102,29 @@ namespace DormitoryUI.Controllers
         }
 
         [HttpGet, Route("bill/all-bill")]
-        public IHttpActionResult GetAll()
+        [Authorize]
+        public async Task<IHttpActionResult> GetAll()
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest();
 
-                var result = _billService.GetAll(_ => _.Contract, _ => _.BillDetails);
+                List<Bill> result = null;
+                if (User.IsInRole(AccountType.ADMINISTRATOR.ToString()))
+                {
+                    result = _billService.GetAll(_ => _.Contract.Room.Apartment, _ => _.BillDetails
+                .Select(__ => __.BrandService.Service)).ToList();
 
-                return Ok(result);
+                }
+                else
+                {
+                    var emp = await _accountService.GetEmployeeByAccount(User.Identity.GetUserId());
+                    result = _billService.GetAll(_ => _.Contract.Room.Apartment, _ => _.BillDetails
+                    .Select(__ => __.BrandService.Service))
+                    .Where(_ => _.Contract.Room.Apartment.BrandId == emp.BrandId).ToList();
+                }
+                return Ok(ModelMapper.ConvertToViewModel(result));
             }
             catch (Exception e)
             {

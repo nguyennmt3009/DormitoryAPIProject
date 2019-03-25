@@ -67,25 +67,18 @@ namespace DormitoryUI.Controllers
 
         [HttpGet]
         [Route("all-service")]
-        public async Task<IHttpActionResult> GetAll()
+        public IHttpActionResult GetAll()
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest();
 
-
-                List<Service> result = null;
-                if (User.IsInRole(AccountType.ADMINISTRATOR.ToString()))
-                {
-                    result = _serviceService.GetAll(_ => _.BrandServices).ToList();
-                }
-                else
-                {
-                    var emp = await _accountService.GetEmployeeByAccount(User.Identity.GetUserId());
-                    result = _serviceService.GetAll(_ => _.BrandServices)
-                        .Where(_ => _.BrandServices.FirstOrDefault().BrandId == emp.BrandId).ToList();
-                }
+                List<Service> services = _serviceService.GetAll(_ => _.BrandServices).ToList();
+                var result = services.Where(_ => _.BrandServices.Count == 0).Select(_ => new {
+                    _.Id,
+                    _.Name
+                });
                 return Ok(result);
             }
             catch (Exception e)
@@ -107,6 +100,28 @@ namespace DormitoryUI.Controllers
                 if (service == null) return BadRequest("Service not found");
 
                 service.Name = viewModel.Name;
+
+                _serviceService.Update(service);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
+        [HttpDelete]
+        [Route("")]
+        public IHttpActionResult Delete(int id)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                Service service = _serviceService.Get(_ => _.Id == id);
+                if (service == null) return BadRequest("Service not found");
 
                 _serviceService.Update(service);
 

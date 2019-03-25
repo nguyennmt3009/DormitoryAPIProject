@@ -98,6 +98,26 @@ namespace DormitoryUI.Controllers
             }
         }
 
+        [HttpGet, Route("all-billDetail-byBill")]
+        public IHttpActionResult GetAllByBill(int billId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+                var bill = _billService.Get(_ => _.Id == billId);
+                if (bill == null) return BadRequest("Bill not found");
+
+                var result = _billDetailService.GetAll(_ => _.BrandService).Where(_ => _.BillId == billId).ToList();
+
+                return Ok(ModelMapper.ConvertToViewModel(result));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
         [HttpPut, Route("")]
         public IHttpActionResult Update(BillDetailUpdateVM viewModel)
         {
@@ -106,7 +126,34 @@ namespace DormitoryUI.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest();
 
-                _billDetailService.Update(ModelMapper.ConvertToModel(viewModel));
+                var billDetail = _billDetailService.Get(_ => _.Id == viewModel.Id);
+                if (billDetail == null) return BadRequest("Bill detail not found");
+
+                billDetail.Price = viewModel.Price;
+                billDetail.Quantity = viewModel.Quantity;
+
+                _billDetailService.Update(billDetail);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
+        [HttpDelete, Route("")]
+        public IHttpActionResult Delete(int id)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                var billDetail = _billDetailService.Get(_ => _.Id == id);
+                if (billDetail == null) return BadRequest("Bill detail not found");
+
+                _billDetailService.Delete(billDetail);
 
                 return Ok();
             }

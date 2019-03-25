@@ -28,5 +28,9 @@ namespace DormitoryUI.ViewModels
         public int ApartmentId { get; set; }
     }
 
-
+    public class RoomGetVM
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
 }

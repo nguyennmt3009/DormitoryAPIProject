@@ -1,10 +1,16 @@
 ﻿using BusinessLogic.Define;
+using DataAccess.Database;
+using DataAccess.Entities;
 using DormitoryUI.ViewModels;
+using IdentityManager.Entities;
+using IdentityManager.IdentityService;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace DormitoryUI.Controllers
@@ -13,9 +19,11 @@ namespace DormitoryUI.Controllers
     public class BrandServiceController : BaseController
     {
         public readonly IBrandServiceService _brandServiceService;
+        public readonly AccountAdapter _accountService;
 
-        public BrandServiceController(IBrandServiceService brandServiceService)
+        public BrandServiceController(IEntityContext context, IBrandServiceService brandServiceService)
         {
+            _accountService = new AccountAdapter(context);
             _brandServiceService = brandServiceService;
         }
 
@@ -41,15 +49,26 @@ namespace DormitoryUI.Controllers
 
         [HttpGet]
         [Route("all-brand-service")]
-        public IHttpActionResult GetAll()
+        [Authorize]
+        public async Task<IHttpActionResult> GetAll()
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest();
 
-                var result = _brandServiceService.GetAll(_ => _.Service, _ => _.Brand);
+                List<BrandService> result = null;
 
+                if (User.IsInRole(AccountType.ADMINISTRATOR.ToString()))
+                {
+                    result = _brandServiceService.GetAll(_ => _.Service, _ => _.Brand).ToList();
+                }
+                else
+                {
+                    var emp = await _accountService.GetEmployeeByAccount(User.Identity.GetUserId());
+                    result = _brandServiceService.GetAll(_ => _.Service)
+                        .Where(_ => _.BrandId == emp.BrandId).ToList();
+                }
                 return Ok(result);
             }
             catch (Exception e)
@@ -57,17 +76,30 @@ namespace DormitoryUI.Controllers
                 return InternalServerError(e);
             }
         }
+        
 
         [HttpPost]
         [Route("")]
-        public IHttpActionResult Create(BrandServiceCreateVM viewModel)
+        [Authorize]
+        public async Task<IHttpActionResult> Create(BrandServiceCreateVM viewModel)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest();
 
-                _brandServiceService.Create(ModelMapper.ConvertToModel(viewModel));
+                if (User.IsInRole(AccountType.ADMINISTRATOR.ToString()))
+                {
+                    return Unauthorized();
+                }
+                else
+                {
+                    var emp = await _accountService.GetEmployeeByAccount(User.Identity.GetUserId());
+                    var model = ModelMapper.ConvertToModel(viewModel);
+                    model.BrandId = emp.BrandId ?? 1;
+                    _brandServiceService.Create(model);
+                }
+
 
                 return Ok();
             }
@@ -85,7 +117,13 @@ namespace DormitoryUI.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest();
 
-                _brandServiceService.Update(ModelMapper.ConvertToModel(viewModel));
+                var brandService = _brandServiceService.Get(element => element.Id == viewModel.Id);
+                if (brandService == null) return BadRequest("Brand service not found");
+
+                brandService.Price = viewModel.Price;
+                brandService.Description = viewModel.Description;
+
+                _brandServiceService.Update(brandService);
 
                 return Ok();
             }

@@ -162,7 +162,7 @@ namespace DormitoryUI.Controllers
                 var a = _apartmentService.Get(_ => _.Id == viewModel.Id);
                 a.Location = viewModel.Location;
                 a.Name = viewModel.Name;
-                a.AgencyId = viewModel.Agency;
+                a.AgencyId = viewModel.AgencyId;
 
                 _apartmentService.Update(a);
                 return Ok();

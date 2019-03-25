@@ -20,8 +20,8 @@ namespace DormitoryUI.Controllers
 
         public EmployeeController(IEmployeeService employeeService, IEntityContext context)
         {
-            _employeeService = employeeService;
             _accountAdapter = new AccountAdapter(context);
+            _employeeService = employeeService;
         }
 
         [HttpGet]

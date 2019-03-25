@@ -5,8 +5,10 @@ using DormitoryUI.ViewModels;
 using IdentityManager.Entities;
 using IdentityManager.IdentityService;
 using Microsoft.AspNet.Identity;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -15,6 +17,16 @@ using System.Web.Http;
 
 namespace DormitoryUI.Controllers
 {
+    public class PhuongResponse
+    {
+        [JsonProperty(PropertyName = "result-code")]
+        public int resultCode { get; set; }
+        public string message { get; set; }
+        public bool success { get; set; }
+        public string error { get; set; }
+        public object data { get; set; }
+
+    }
     
     public class ContractController : BaseController
     {
@@ -29,8 +41,47 @@ namespace DormitoryUI.Controllers
             _customerContractService = customerContractService;
         }
 
-        
-        
+        [HttpGet, Route("transaction")]
+        public IHttpActionResult GetTransaction(int customer_id, string from, string to)
+        {
+            return Ok(new PhuongResponse {
+                resultCode = 1,
+                message = "Mieo mieo",
+                success = true,
+                error = null,
+                data = new List<object>
+                {
+                    new
+                    {
+                        amount = 6000000,
+                        billId = 1,
+                        date = "11/02/2018",
+                        isDebit = false,
+                    },
+                    new
+                    {
+                        amount = 2400000,
+                        billId = 8,
+                        date = "15/03/2018",
+                        isDebit = true,
+                    },
+                    new
+                    {
+                        amount = 3000000,
+                        billId = 4,
+                        date = "11/04/2018",
+                        isDebit = false,
+                    },
+                    new
+                    {
+                        amount = 3600000,
+                        billId = 2,
+                        date = "21/05/2019",
+                        isDebit = true,
+                    }
+                }
+            });
+        }
 
         [HttpGet, Route("contract")]
         public IHttpActionResult Get(int id)
@@ -60,6 +111,27 @@ namespace DormitoryUI.Controllers
 
                 var result = _contractService.GetAll(_ => _.Room.Apartment.Brand)
                     .Where(_ => _.Room.Apartment.BrandId == brandId);
+
+                if (result == null) return BadRequest("Contract not found");
+
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
+        [HttpGet, Route("contract/active-contract-by-room")]
+        public IHttpActionResult GetActiveByRoom(int roomId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                var result = _contractService.GetAll(_ => _.Room, _ => _.CustomerContracts.Select(__ => __.Customer))
+                    .Where(_ => _.RoomId == roomId && _.Status);
 
                 if (result == null) return BadRequest("Contract not found");
 
@@ -107,7 +179,7 @@ namespace DormitoryUI.Controllers
                 {
                     var emp = await _accountService.GetEmployeeByAccount(User.Identity.GetUserId());
                     result = _contractService.GetAll(_ => _.Room.Apartment)
-                        .Where(_ => _.Room.Apartment.BrandId == emp.BrandId).ToList();
+                        .Where(_ => _.Room.Apartment.BrandId == emp.BrandId && _.Status).ToList();
                 }
 
                 return Ok(result);
