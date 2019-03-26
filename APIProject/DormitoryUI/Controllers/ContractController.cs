@@ -17,17 +17,6 @@ using System.Web.Http;
 
 namespace DormitoryUI.Controllers
 {
-    public class PhuongResponse
-    {
-        [JsonProperty(PropertyName = "result-code")]
-        public int resultCode { get; set; }
-        public string message { get; set; }
-        public bool success { get; set; }
-        public string error { get; set; }
-        public object data { get; set; }
-
-    }
-    
     public class ContractController : BaseController
     {
         public readonly IContractService _contractService;
@@ -296,4 +285,16 @@ namespace DormitoryUI.Controllers
         }
 
     }
+
+    public class PhuongResponse
+    {
+        [JsonProperty(PropertyName = "result-code")]
+        public int resultCode { get; set; }
+        public string message { get; set; }
+        public bool success { get; set; }
+        public string error { get; set; }
+        public object data { get; set; }
+
+    }
+
 }

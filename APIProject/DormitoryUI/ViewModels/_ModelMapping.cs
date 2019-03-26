@@ -267,7 +267,6 @@
             {
                 Id = viewModel.Id,
                 Quantity = viewModel.Quantity,
-                Price = viewModel.Price,
             };
 
 

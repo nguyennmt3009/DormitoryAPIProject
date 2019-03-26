@@ -20,7 +20,6 @@ using System.Web.Http;
 namespace DormitoryUI.Controllers
 {
 
-    [RoutePrefix("")]
     public class BillController : BaseController
     {
         public readonly IBillService _billService;
@@ -44,6 +43,60 @@ namespace DormitoryUI.Controllers
             client.BaseAddress = new Uri("http://apicrm.unicode.edu.vn/");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        }
+
+        [HttpPost, Route("account/deposit")]
+        public async Task<IHttpActionResult> Deposit(int customerId, double amount)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                var result = _customerService.Get(_ => _.Id == customerId);
+                if (result == null) return BadRequest("Customer not found");
+
+                HttpResponseMessage respone = await client.GetAsync("customer?customer_id=" + customerId);
+                PhuongTransactionData data = await respone.Content.ReadAsAsync<PhuongTransactionData>();
+
+                if (data.data == null)
+                {
+                    var newCustomer = JsonConvert.SerializeObject(new
+                    {
+                        customer_id = customerId,
+                        deposit_amount = 0
+                    });
+
+                    var buffer = Encoding.UTF8.GetBytes(newCustomer);
+                    var byteContent = new ByteArrayContent(buffer);
+
+
+                    byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                    respone = await client.PostAsync("customer", byteContent);
+                }
+
+                var transaction = JsonConvert.SerializeObject(new
+                {
+                    customer_id = customerId,
+                    amount,
+                    date = DateTimeOffset.Now,
+                    bill_id = 0,
+                    is_debit = true
+                });
+
+                var buffer1 = Encoding.UTF8.GetBytes(transaction);
+                var byteContent1 = new ByteArrayContent(buffer1);
+
+
+                byteContent1.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                respone = await client.PostAsync("transaction", byteContent1);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
         }
 
         [HttpGet, Route("bill")]
@@ -101,6 +154,8 @@ namespace DormitoryUI.Controllers
             }
         }
 
+
+
         [HttpGet, Route("bill/all-bill")]
         [Authorize]
         public async Task<IHttpActionResult> GetAll()
@@ -124,6 +179,27 @@ namespace DormitoryUI.Controllers
                     .Select(__ => __.BrandService.Service))
                     .Where(_ => _.Contract.Room.Apartment.BrandId == emp.BrandId).ToList();
                 }
+                return Ok(ModelMapper.ConvertToViewModel(result));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+        [HttpGet, Route("bill/all-bill-test")]
+        public IHttpActionResult GetAllTest()
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                List<Bill> result = null;
+              
+                    result = _billService.GetAll(_ => _.Contract.Room.Apartment, _ => _.BillDetails
+                    .Select(__ => __.BrandService.Service))
+                    .Where(_ => _.Contract.Room.Apartment.BrandId == 1).ToList();
+                
                 return Ok(ModelMapper.ConvertToViewModel(result));
             }
             catch (Exception e)

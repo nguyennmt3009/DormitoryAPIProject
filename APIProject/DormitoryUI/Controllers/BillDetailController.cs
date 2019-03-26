@@ -108,7 +108,8 @@ namespace DormitoryUI.Controllers
                 var bill = _billService.Get(_ => _.Id == billId);
                 if (bill == null) return BadRequest("Bill not found");
 
-                var result = _billDetailService.GetAll(_ => _.BrandService).Where(_ => _.BillId == billId).ToList();
+                var result = _billDetailService.GetAll(_ => _.BrandService.Service)
+                    .Where(_ => _.BillId == billId).ToList();
 
                 return Ok(ModelMapper.ConvertToViewModel(result));
             }
@@ -126,10 +127,16 @@ namespace DormitoryUI.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest();
 
-                var billDetail = _billDetailService.Get(_ => _.Id == viewModel.Id);
+                var billDetail = _billDetailService.Get(_ => _.Id == viewModel.Id, _ => _.Bill, _ => _.BrandService);
                 if (billDetail == null) return BadRequest("Bill detail not found");
+                
 
-                billDetail.Price = viewModel.Price;
+
+                billDetail.Bill.TotalAmount = billDetail.Bill.TotalAmount 
+                    + (viewModel.Quantity - billDetail.Quantity) * billDetail.Price;
+
+                _billService.Update(billDetail.Bill);
+
                 billDetail.Quantity = viewModel.Quantity;
 
                 _billDetailService.Update(billDetail);
