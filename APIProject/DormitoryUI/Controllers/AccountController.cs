@@ -57,9 +57,6 @@ namespace DormitoryUI.Controllers
                 var customer = _customerService.Get(_ => _.Id == customerId, x => x.CustomerContracts
                 .Select(y => y.Contract.Room.Apartment.Brand));
 
-
-                var brandId = customer.CustomerContracts.FirstOrDefault().Contract.Room.Apartment.Brand.Id;
-
                 return Ok(new
                 {
                     customer.Fullname,
@@ -68,7 +65,7 @@ namespace DormitoryUI.Controllers
                     customer.Phone,
                     birthdate = customer.Birthdate.ToString("dd/MM/yyyy"),
                     customer.Id,
-                    brandId
+                    customer.BrandId,
                 });
             }
             catch (Exception e)
@@ -118,50 +115,6 @@ namespace DormitoryUI.Controllers
             }
         }
 
-        
-
-
-        [HttpPost, Route("customer")]
-        public async Task<IHttpActionResult> CreateCustomer(CustomerCreateVM viewModel)
-        {
-            try
-            {
-                if (!ModelState.IsValid) return BadRequest("Invalid model");
-
-                var contract = _contractService.Get(z => z.Id == viewModel.ContractId);
-                if (contract == null) return BadRequest("Contract not found");
-
-                var username = NonUnicode(viewModel.FirstName);
-                Customer customer = ModelMapper.ConvertToModel(viewModel);
-                _customerService.Create(customer);
-
-                customer.Username = username + customer.Id;
-                _customerService.Update(customer);
-                _customerContractService.Create(new CustomerContract
-                {
-                    ContractId = contract.Id,
-                    CustomerId = customer.Id
-                });
-
-                IdentityInfor infor = await _accountAdapter.RegisterCustomer(customer.Id, username);
-
-                if (infor.IsError)
-                {
-                    foreach (var error in infor.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, new Exception(error));
-                    }
-                    return BadRequest(ModelState);
-                }
-
-                return Ok(ModelMapper.ConvertToViewModel(customer));
-            }
-            catch (Exception e)
-            {
-                return InternalServerError(e);
-            }
-        }
-        
         [HttpPost, Route("register")]
         public async Task<IHttpActionResult> Register(RegisterViewModel models)
         {
@@ -190,13 +143,13 @@ namespace DormitoryUI.Controllers
         {
             try
             {
-                if (!ModelState.IsValid) return BadRequest("Invalid model");
+                //if (!ModelState.IsValid) return BadRequest("Invalid model");
 
-                var customer = _customerService.Get(_ => _.Id == customerId);
-                if (customer == null) return BadRequest("Customer not found");
+                //var customer = _customerService.Get(_ => _.Id == customerId);
+                //if (customer == null) return BadRequest("Customer not found");
 
-                _customerService.Delete(customer);
-                _accountAdapter.DeleteCustomer(customerId);
+                //_customerService.Delete(customer);
+                //_accountAdapter.DeleteCustomer(customerId);
 
                 return Ok();
             }
@@ -231,30 +184,7 @@ namespace DormitoryUI.Controllers
         //    }
         //}
 
-        private string NonUnicode(string text)
-        {
-            text = Regex.Replace(text, @"\s+", "").ToLower();
-            string[] arr1 = new string[] { "á", "à", "ả", "ã", "ạ", "â", "ấ", "ầ", "ẩ", "ẫ", "ậ", "ă", "ắ", "ằ", "ẳ", "ẵ", "ặ",
-            "đ",
-            "é","è","ẻ","ẽ","ẹ","ê","ế","ề","ể","ễ","ệ",
-            "í","ì","ỉ","ĩ","ị",
-            "ó","ò","ỏ","õ","ọ","ô","ố","ồ","ổ","ỗ","ộ","ơ","ớ","ờ","ở","ỡ","ợ",
-            "ú","ù","ủ","ũ","ụ","ư","ứ","ừ","ử","ữ","ự",
-            "ý","ỳ","ỷ","ỹ","ỵ",};
-            string[] arr2 = new string[] { "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a",
-            "d",
-            "e","e","e","e","e","e","e","e","e","e","e",
-            "i","i","i","i","i",
-            "o","o","o","o","o","o","o","o","o","o","o","o","o","o","o","o","o",
-            "u","u","u","u","u","u","u","u","u","u","u",
-            "y","y","y","y","y",};
-            for (int i = 0; i < arr1.Length; i++)
-            {
-                text = text.Replace(arr1[i], arr2[i]);
-                text = text.Replace(arr1[i].ToUpper(), arr2[i].ToUpper());
-            }
-            return text;
-        }
+        
     }
 
 

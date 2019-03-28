@@ -14,6 +14,7 @@
             // 1 - n Employee
             // 1 - n BrandService
             // 1 - n Apartment
+            // 1 - n Customer
         }
     }
 }

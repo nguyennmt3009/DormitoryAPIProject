@@ -46,3 +46,6 @@ E:\GitHub\DormitoryAPIProject\APIProject\DataAccess\obj\Release\DataAccess.cspro
 E:\GitHub\DormitoryAPIProject\APIProject\DataAccess\obj\Release\DataAccess.csproj.CopyComplete
 E:\GitHub\DormitoryAPIProject\APIProject\DataAccess\obj\Release\DataAccess.dll
 E:\GitHub\DormitoryAPIProject\APIProject\DataAccess\obj\Release\DataAccess.pdb
+E:\GitHub\DormitoryAPIProject\APIProject\DataAccess\obj\Release\DataAccess.Migrations.CustomerBrandId.resources
+E:\GitHub\DormitoryAPIProject\APIProject\DataAccess\obj\Release\DataAccess.Migrations.customerstatus.resources
+E:\GitHub\DormitoryAPIProject\APIProject\DataAccess\obj\Release\DataAccess.Migrations.thirdTransaction.resources

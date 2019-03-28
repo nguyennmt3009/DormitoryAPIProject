@@ -55,6 +55,8 @@
   <ItemGroup>
     <Compile Include="Database\DormitoryContext.cs" />
     <Compile Include="Database\IEntityContext.cs" />
+    <Compile Include="Entities\AccountCustomer.cs" />
+    <Compile Include="Entities\AccountPayment.cs" />
     <Compile Include="Entities\Apartment.cs" />
     <Compile Include="Entities\Bill.cs" />
     <Compile Include="Entities\BillDetail.cs" />
@@ -67,6 +69,7 @@
     <Compile Include="Entities\Room.cs" />
     <Compile Include="Entities\RoomType.cs" />
     <Compile Include="Entities\Service.cs" />
+    <Compile Include="Entities\Transaction.cs" />
     <Compile Include="Entities\_BaseEntity.cs" />
     <Compile Include="EntityConfiguration\ApartmentConfig.cs" />
     <Compile Include="EntityConfiguration\BillConfig.cs" />
@@ -77,6 +80,7 @@
     <Compile Include="EntityConfiguration\CustomerConfig.cs" />
     <Compile Include="EntityConfiguration\CustomerContractConfig.cs" />
     <Compile Include="EntityConfiguration\EmployeeConfig.cs" />
+    <Compile Include="EntityConfiguration\PhuongConfig.cs" />
     <Compile Include="EntityConfiguration\RoomConfig.cs" />
     <Compile Include="EntityConfiguration\RoomTypeConfig.cs" />
     <Compile Include="EntityConfiguration\ServiceConfig.cs" />
@@ -107,6 +111,18 @@
     <Compile Include="Migrations\201903150900345_isBuildingRentBillDetail.cs" />
     <Compile Include="Migrations\201903150900345_isBuildingRentBillDetail.Designer.cs">
       <DependentUpon>201903150900345_isBuildingRentBillDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903270957107_CustomerBrandId.cs" />
+    <Compile Include="Migrations\201903270957107_CustomerBrandId.Designer.cs">
+      <DependentUpon>201903270957107_CustomerBrandId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903280853568_customerstatus.cs" />
+    <Compile Include="Migrations\201903280853568_customerstatus.Designer.cs">
+      <DependentUpon>201903280853568_customerstatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903281202580_thirdTransaction.cs" />
+    <Compile Include="Migrations\201903281202580_thirdTransaction.Designer.cs">
+      <DependentUpon>201903281202580_thirdTransaction.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -140,6 +156,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903150900345_isBuildingRentBillDetail.resx">
       <DependentUpon>201903150900345_isBuildingRentBillDetail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903270957107_CustomerBrandId.resx">
+      <DependentUpon>201903270957107_CustomerBrandId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903280853568_customerstatus.resx">
+      <DependentUpon>201903280853568_customerstatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903281202580_thirdTransaction.resx">
+      <DependentUpon>201903281202580_thirdTransaction.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

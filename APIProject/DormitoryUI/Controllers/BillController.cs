@@ -46,24 +46,24 @@ namespace DormitoryUI.Controllers
         }
 
         [HttpPost, Route("account/deposit")]
-        public async Task<IHttpActionResult> Deposit(int customerId, double amount)
+        public async Task<IHttpActionResult> Deposit(DepositVM model)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest();
 
-                var result = _customerService.Get(_ => _.Id == customerId);
+                var result = _customerService.Get(_ => _.Id == model.customerId);
                 if (result == null) return BadRequest("Customer not found");
 
-                HttpResponseMessage respone = await client.GetAsync("customer?customer_id=" + customerId);
+                HttpResponseMessage respone = await client.GetAsync("customer?customer_id=" + model.customerId);
                 PhuongTransactionData data = await respone.Content.ReadAsAsync<PhuongTransactionData>();
 
                 if (data.data == null)
                 {
                     var newCustomer = JsonConvert.SerializeObject(new
                     {
-                        customer_id = customerId,
+                        customer_id = model.customerId,
                         deposit_amount = 0
                     });
 
@@ -77,8 +77,8 @@ namespace DormitoryUI.Controllers
 
                 var transaction = JsonConvert.SerializeObject(new
                 {
-                    customer_id = customerId,
-                    amount,
+                    customer_id = model.customerId,
+                    model.amount,
                     date = DateTimeOffset.Now,
                     bill_id = 0,
                     is_debit = true
@@ -340,5 +340,11 @@ namespace DormitoryUI.Controllers
     public class PhuongTransactionData
     {
         public PhuongTransactionUser data { get; set; }
+    }
+
+    public class DepositVM
+    {
+        public int customerId { get; set; }
+        public double amount { get; set; }
     }
 }

@@ -34,7 +34,8 @@
                 .Add(new CustomerConfig()).Add(new CustomerContractConfig())
                 .Add(new EmployeeConfig())
                 .Add(new RoomConfig()).Add(new RoomTypeConfig())
-                .Add(new ServiceConfig());
+                .Add(new ServiceConfig())
+                .Add(new AccountCustomerConfig()).Add(new AccountPaymentConfig()).Add(new TransactionConfig());
         }
     }
 }

@@ -8,6 +8,21 @@
     public class _ModelMapping
     {
         #region Apartment
+        public ICollection<ApartmentAvailableGetVM> ConvertToAvailableVM(ICollection<Apartment> models)
+            => models.Select(_ => ConvertToAvailableVM(_)).ToList();
+        public ApartmentAvailableGetVM ConvertToAvailableVM(Apartment model)
+        {
+            var a = new ApartmentAvailableGetVM
+            {
+                Id = model.Id,
+                Name = model.Name,
+                Location = model.Location,
+                AgencyId = model.AgencyId,
+                Rooms = ConvertToViewModelAdmin(model.Rooms
+                      .Where(_ => !_.Contracts.Any(c => c.Status)).ToList())
+            };
+            return a;
+        }
         public ApartmentGetVM ConvertToViewModelAdmin(Apartment model)
             => new ApartmentGetVM
             {
@@ -98,14 +113,28 @@
         #endregion
 
         #region Room
-        public RoomGetVM ConvertToViewModelAdmin(Room model)
+        public ICollection<RoomGetVM> ConvertToViewModelAdmin(ICollection<Room> models)
+            => models == null? null : models.Select(_ => ConvertToViewModel(_)).ToList();
+        public RoomGetVM ConvertToViewModel(Room model)
             => new RoomGetVM
+            {
+                Id = model.Id,
+                Name = model.Name,
+                Status = model.Status,
+                ApartmentId = model.ApartmentId ?? 0,
+                Apartment = ConvertToViewModelAdmin(model.Apartment),
+                RoomTypeId = model.RoomTypeId ?? 0,
+                RoomType = model.RoomType == null? null : ConvertToViewModelAdmin(model.RoomType),
+                Contracts = null
+            };
+        public RoomBillGetVM ConvertToViewModelAdmin(Room model)
+            => new RoomBillGetVM
             {
                 Id = model.Id,
                 Name = model.Name
             };
 
-        public ICollection<RoomGetVM> ConvertToViewModel(ICollection<Room> models)
+        public ICollection<RoomBillGetVM> ConvertToViewModel(ICollection<Room> models)
             => models.Select(_ => ConvertToViewModelAdmin(_)).ToList();
 
         public Room ConvertToModel(RoomCreateVM viewModel)
@@ -113,7 +142,7 @@
             {
                 Name = viewModel.Name,
                 ApartmentId = viewModel.ApartmentId,
-                Status = false,
+                Status = true,
                 RoomTypeId = viewModel.RoomTypeId
             };
 
@@ -123,7 +152,6 @@
                 Id = viewModel.Id,
                 Name = viewModel.Name,
                 ApartmentId = viewModel.ApartmentId,
-                Status = viewModel.Status,
                 RoomTypeId = viewModel.RoomTypeId
             };
 
@@ -131,6 +159,12 @@
         #endregion
 
         #region RoomType
+        public RoomTypeRoomGetVM ConvertToViewModelAdmin(RoomType model)
+            => new RoomTypeRoomGetVM
+            {
+                Id = model.Id,
+                Name = model.Name
+            };
         public RoomTypeVM ConvertToViewModel(RoomType model)
             => new RoomTypeVM
             {
@@ -273,6 +307,23 @@
         #endregion
 
         #region Contract
+        public ContractGetVM ConvertToViewModel(Contract model)
+            => new ContractGetVM
+            {
+                Id = model.Id,
+                FromDate = model.FromDate.ToString("dd-MM-yyyy"),
+                DueDate = model.DueDate.ToString("dd-MM-yyyy"),
+                CreatedDate = model.CreatedDate.ToString("dd-MM-yyyy"),
+                Status = model.Status,
+                DueAmount = model.DueAmount,
+                Deposit = model.Deposit,
+                Detail = model.Detail,
+                Room = model.Room,
+                RoomId = model.RoomId,
+                CustomerContracts = model.CustomerContracts
+            };
+        public ICollection<ContractGetVM> ConvertToViewModel(ICollection<Contract> model)
+            => model.Select(_ => ConvertToViewModel(_)).ToList();
         public Contract ConvertToModel(ContractCreateVM viewModel)
             => new Contract
             {
@@ -280,7 +331,7 @@
                 Status = viewModel.Status,
                 FromDate = viewModel.FromDate,
                 DueDate = viewModel.DueDate,
-                CreatedDate = new System.DateTimeOffset(),
+                CreatedDate = DateTimeOffset.Now,
                 Deposit = viewModel.Deposit,
                 Detail = viewModel.Detail,
                 DueAmount = viewModel.DueAmount,

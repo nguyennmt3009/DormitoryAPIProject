@@ -22,55 +22,17 @@ namespace DormitoryUI.Controllers
         public readonly IContractService _contractService;
         public readonly ICustomerContractService _customerContractService;
         public readonly AccountAdapter _accountService;
+        public readonly IRoomService _roomService;
 
-        public ContractController(IEntityContext context, IContractService contractService, ICustomerContractService customerContractService)
+        public ContractController(IEntityContext context, IContractService contractService, 
+            ICustomerContractService customerContractService, IRoomService roomService)
         {
             _accountService = new AccountAdapter(context);
             _contractService = contractService;
             _customerContractService = customerContractService;
+            _roomService = roomService;
         }
-
-        [HttpGet, Route("transaction")]
-        public IHttpActionResult GetTransaction(int customer_id, string from, string to)
-        {
-            return Ok(new PhuongResponse {
-                resultCode = 1,
-                message = "Mieo mieo",
-                success = true,
-                error = null,
-                data = new List<object>
-                {
-                    new
-                    {
-                        amount = 6000000,
-                        billId = 1,
-                        date = "11/02/2018",
-                        isDebit = false,
-                    },
-                    new
-                    {
-                        amount = 2400000,
-                        billId = 8,
-                        date = "15/03/2018",
-                        isDebit = true,
-                    },
-                    new
-                    {
-                        amount = 3000000,
-                        billId = 4,
-                        date = "11/04/2018",
-                        isDebit = false,
-                    },
-                    new
-                    {
-                        amount = 3600000,
-                        billId = 2,
-                        date = "21/05/2019",
-                        isDebit = true,
-                    }
-                }
-            });
-        }
+        
 
         [HttpGet, Route("contract")]
         public IHttpActionResult Get(int id)
@@ -140,9 +102,19 @@ namespace DormitoryUI.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest();
 
-                _contractService.Create(ModelMapper.ConvertToModel(viewModel));
+                var validate = _contractService.GetAll().Where(_ => _.RoomId == viewModel.RoomId && _.Status);
+                if (validate.Count() > 0)
+                    return BadRequest("Phòng đã có hợp đồng");
 
-                return Ok();
+                var room = _roomService.Get(_ => _.Id == viewModel.RoomId);
+                room.Status = false;
+                _roomService.Update(room);
+
+                var contract = ModelMapper.ConvertToModel(viewModel);
+                _contractService.Create(contract);
+
+                var loiLen = _contractService.Get(_ => _.Id == contract.Id, _ => _.Room.Apartment);
+                return Ok(loiLen);
             }
             catch (Exception e)
             {
@@ -167,35 +139,19 @@ namespace DormitoryUI.Controllers
                 else
                 {
                     var emp = await _accountService.GetEmployeeByAccount(User.Identity.GetUserId());
-                    result = _contractService.GetAll(_ => _.Room.Apartment)
+                    result = _contractService.GetAll(_ => _.Room.Apartment, _ => _.CustomerContracts
+                    .Select(__ => __.Customer))
                         .Where(_ => _.Room.Apartment.BrandId == emp.BrandId && _.Status).ToList();
                 }
 
-                return Ok(result);
+                return Ok(ModelMapper.ConvertToViewModel(result));
             }
             catch (Exception e)
             {
                 return InternalServerError(e);
             }
         }
-
-        //[HttpGet, Route("mobile/all-contract/{customerId}")]
-        //public IHttpActionResult GetAllByCustomer(int customerId)
-        //{
-        //    try
-        //    {
-        //        if (!ModelState.IsValid)
-        //            return BadRequest();
-
-        //        var result = _contractService.GetAll(_ => _.Room);
-
-        //        return Ok(result);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return InternalServerError(e);
-        //    }
-        //}
+        
 
 
         [HttpPut, Route("contract")]
@@ -224,7 +180,33 @@ namespace DormitoryUI.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest();
 
+                var validate = _customerContractService.GetAll().Any(_ => _.CustomerId == viewModel.CustomerId
+                && _.ContractId == viewModel.ContractId);
+
+                if (validate) return BadRequest("Customer is existed in this contract");
+
                 _customerContractService.Create(ModelMapper.ConvertToModel(viewModel));
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
+        [HttpDelete, Route("contract/contract-customer")]
+        public IHttpActionResult DeleteContractCustomer(int contractCustomerId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                var validate = _customerContractService.Get(_ => _.Id == contractCustomerId);
+                if (validate == null) return BadRequest("Customer contract not found");
+
+                _customerContractService.Delete(validate);
 
                 return Ok();
             }
@@ -283,17 +265,6 @@ namespace DormitoryUI.Controllers
                 return InternalServerError(e);
             }
         }
-
-    }
-
-    public class PhuongResponse
-    {
-        [JsonProperty(PropertyName = "result-code")]
-        public int resultCode { get; set; }
-        public string message { get; set; }
-        public bool success { get; set; }
-        public string error { get; set; }
-        public object data { get; set; }
 
     }
 

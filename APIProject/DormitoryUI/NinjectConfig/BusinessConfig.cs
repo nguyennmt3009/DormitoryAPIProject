@@ -23,7 +23,10 @@
             Bind<IBillDetailService>().To<BillDetailService>();
             Bind<IContractService>().To<ContractService>();
             Bind<ICustomerContractService>().To<CustomerContractService>();
-            
+
+            Bind<IAccountCustomerService>().To<AccountCustomerService>();
+            Bind<IAccountPaymentService>().To<AccountPaymentService>();
+            Bind<ITransactionService>().To<TransactionService>();
 
             Bind<IUnitOfWork>().To<UnitOfWork>();
             Bind<IEntityContext>().To<DormitoryContext>();

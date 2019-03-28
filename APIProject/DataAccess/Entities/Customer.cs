@@ -13,5 +13,7 @@
         public DateTimeOffset Birthdate { get; set; }
         public ICollection<CustomerContract> CustomerContracts { get; set; }
         public string Username { get; set; }
+        public int BrandId { get; set; }
+        public bool Status { get; set; }
     }
 }

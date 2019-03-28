@@ -59,15 +59,16 @@ namespace DormitoryUI.Controllers
 
                 var result = _roomService.GetAll(z => z.Apartment.Brand, _ => _.RoomType, _ => _.Contracts)
                     .Where(z => z.Apartment.BrandId == brandId);
-                if (result == null) return BadRequest("Room not found");
 
-                return Ok(result);
+                return Ok(ModelMapper.ConvertToViewModelAdmin(result.ToList()));
             }
             catch (Exception e)
             {
                 return InternalServerError(e);
             }
         }
+
+        
 
         [HttpDelete, Route("")]
         public IHttpActionResult Delete(int id)
@@ -132,7 +133,7 @@ namespace DormitoryUI.Controllers
                         .Where(_ => _.Apartment.BrandId == emp.BrandId).ToList();
                 }
 
-                return Ok(rooms);
+                return Ok(ModelMapper.ConvertToViewModelAdmin(rooms.ToList()));
             }
             catch (Exception e)
             {
@@ -148,12 +149,11 @@ namespace DormitoryUI.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest();
 
-                var room = _roomService.Get(z => z.Id == viewModel.Id);
+                var room = _roomService.Get(z => z.Id == viewModel.Id, _ => _.Contracts);
                 if (room == null) return BadRequest("Room not found");
 
                 room.Name = viewModel.Name;
                 room.RoomTypeId = viewModel.RoomTypeId;
-                room.Status = viewModel.Status;
                 room.ApartmentId = viewModel.ApartmentId;
 
                 _roomService.Update(room);

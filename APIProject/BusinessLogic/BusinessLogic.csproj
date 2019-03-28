@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Define\IAccountCustomerService.cs" />
+    <Compile Include="Define\IAccountPaymentService.cs" />
     <Compile Include="Define\IApartmentService.cs" />
     <Compile Include="Define\IBillDetailService.cs" />
     <Compile Include="Define\IBillService.cs" />
@@ -53,6 +55,9 @@
     <Compile Include="Define\IRoomService.cs" />
     <Compile Include="Define\IRoomTypeService.cs" />
     <Compile Include="Define\IServiceService.cs" />
+    <Compile Include="Define\ITransactionService.cs" />
+    <Compile Include="Implement\AccountCustomerService.cs" />
+    <Compile Include="Implement\AccountPaymentService.cs" />
     <Compile Include="Implement\ApartmentService.cs" />
     <Compile Include="Implement\BillDetailService.cs" />
     <Compile Include="Implement\BillService.cs" />
@@ -65,6 +70,7 @@
     <Compile Include="Implement\RoomService.cs" />
     <Compile Include="Implement\RoomTypeService.cs" />
     <Compile Include="Implement\ServiceService.cs" />
+    <Compile Include="Implement\TransactionService.cs" />
     <Compile Include="Implement\_BaseService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

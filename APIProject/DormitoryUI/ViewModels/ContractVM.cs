@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataAccess.Entities;
+using System;
+using System.Collections.Generic;
 
 namespace DormitoryUI.ViewModels
 {
@@ -25,6 +27,20 @@ namespace DormitoryUI.ViewModels
         public int RoomId { get; set; }
     }
 
+    public class ContractGetVM
+    {
+        public int Id { get; set; }
+        public string Detail { get; set; }
+        public string CreatedDate { get; set; }
+        public string FromDate { get; set; }
+        public string DueDate { get; set; }
+        public decimal Deposit { get; set; } // Tien dat coc
+        public decimal DueAmount { get; set; } // Tien moi thang
+        public bool Status { get; set; }
+        public int RoomId { get; set; }
+        public Room Room { get; set; }
+        public ICollection<CustomerContract> CustomerContracts { get; set; }
+    }
     public class ContractVM
     {
         public int Id { get; set; }

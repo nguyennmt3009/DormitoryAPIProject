@@ -77,6 +77,32 @@ namespace DormitoryUI.Controllers
             }
         }
 
+        [HttpGet, Route("all-available-apartment-room")]
+        [Authorize]
+        public async Task<IHttpActionResult> GetAllAvailable()
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                if (!User.IsInRole(AccountType.EMPLOYEE.ToString()))
+                {
+                    return Unauthorized();
+                }
+                var emp = await _accountService.GetEmployeeByAccount(User.Identity.GetUserId());
+
+                var result = _apartmentService.GetAll(_ => _.Rooms.Select(__ => __.Contracts))
+                    .Where(z => z.BrandId == emp.BrandId).ToList();
+
+                return Ok(ModelMapper.ConvertToAvailableVM(result));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
         [HttpGet]
         [Route("all-brand-apartment")]
         //[SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<Apartment>))]
@@ -91,11 +117,11 @@ namespace DormitoryUI.Controllers
                     return BadRequest("Brand is not existed");
 
 
-                var result = _apartmentService.GetAll(_ => _.Brand)
+                var result = _apartmentService.GetAll(_ => _.Rooms, _ => _.RoomTypes)
                     .Where(_ => _.BrandId == brandId).ToList();
 
 
-                return Ok(ModelMapper.ConvertToViewModel(result));
+                return Ok(result);
             }
             catch (Exception e)
             {

@@ -22,7 +22,7 @@
     public class BillGetVM
     {
         public int Id { get; set; }
-        public RoomGetVM Room { get; set; }
+        public RoomBillGetVM Room { get; set; }
         public ApartmentGetVM Apartment { get; set; }
         public bool Status { get; set; }
         public string FromDate { get; set; }
