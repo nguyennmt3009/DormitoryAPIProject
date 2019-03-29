@@ -243,16 +243,23 @@ namespace DormitoryUI.Controllers
                 if (data.data == null) return BadRequest("Tài khoản không tồn tại");
 
                 var bill = _billService.Get(_ => _.Id == billId);
-                if (bill == null) return BadRequest("Bill not found"); 
+                if (bill == null) return BadRequest("Bill not found");
 
+                if (bill.Status) return Ok("Bill đã được thanh toán");
 
                 if (data.data.list_account.amount_balance < bill.TotalAmount)
                     return Ok("Bạn không đủ tiền để thực hiện giao dịch này");
 
                 if (data.data.list_account.status == "Chưa kích hoạt")
-                    return Ok("Tài khoản chưa kích hoạt");
+                {
+                    var method = new HttpMethod("PATCH");
+                    var request = new HttpRequestMessage(method, client.BaseAddress 
+                        + "customer/active?customer_id=" + customerId);
 
+                    var patchResponse = await client.SendAsync(request);
 
+                }
+                    
                 var transaction = JsonConvert.SerializeObject(new
                 {
                     customer_id = customerId,

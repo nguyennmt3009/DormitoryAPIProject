@@ -39,10 +39,9 @@ E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\bin\Debug\EntityFramewo
 E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\bin\Debug\Microsoft.AspNet.Identity.Core.xml
 E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
 E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\obj\Debug\IdentityManager.csprojAssemblyReference.cache
-E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\obj\Debug\IdentityManager.Migrations.initidentity.resources
-E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\obj\Debug\IdentityManager.Migrations.username3.resources
-E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\obj\Debug\IdentityManager.csproj.GenerateResource.cache
 E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\obj\Debug\IdentityManager.csproj.CoreCompileInputs.cache
 E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\obj\Debug\IdentityManager.csproj.CopyComplete
 E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\obj\Debug\IdentityManager.dll
 E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\obj\Debug\IdentityManager.pdb
+E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\obj\Debug\IdentityManager.Migrations.initIdentity.resources
+E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\obj\Debug\IdentityManager.csproj.GenerateResource.cache

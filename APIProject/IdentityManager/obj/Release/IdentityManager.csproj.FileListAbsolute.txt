@@ -40,7 +40,6 @@ E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\bin\Release\Microsoft.A
 E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\bin\Release\Microsoft.AspNet.Identity.EntityFramework.xml
 E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\obj\Release\IdentityManager.csprojAssemblyReference.cache
 E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\obj\Release\IdentityManager.Migrations.initidentity.resources
-E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\obj\Release\IdentityManager.Migrations.username3.resources
 E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\obj\Release\IdentityManager.csproj.GenerateResource.cache
 E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\obj\Release\IdentityManager.csproj.CoreCompileInputs.cache
 E:\GitHub\DormitoryAPIProject\APIProject\IdentityManager\obj\Release\IdentityManager.csproj.CopyComplete

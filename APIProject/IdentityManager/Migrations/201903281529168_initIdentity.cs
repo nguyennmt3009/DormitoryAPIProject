@@ -3,7 +3,7 @@ namespace IdentityManager.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class initidentity : DbMigration
+    public partial class initIdentity : DbMigration
     {
         public override void Up()
         {
@@ -36,8 +36,7 @@ namespace IdentityManager.Migrations
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 128),
-                        CustomerId = c.Int(),
-                        EmployeeId = c.Int(),
+                        UserDormitoryId = c.Int(),
                         Email = c.String(maxLength: 256),
                         EmailConfirmed = c.Boolean(nullable: false),
                         PasswordHash = c.String(),

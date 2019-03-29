@@ -62,13 +62,9 @@
     <Compile Include="IdentityService\AccountAdapter.cs" />
     <Compile Include="IdentityService\AccountService.cs" />
     <Compile Include="IdentityService\RoleService.cs" />
-    <Compile Include="Migrations\201902241220208_initidentity.cs" />
-    <Compile Include="Migrations\201902241220208_initidentity.Designer.cs">
-      <DependentUpon>201902241220208_initidentity.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201903031248029_username3.cs" />
-    <Compile Include="Migrations\201903031248029_username3.Designer.cs">
-      <DependentUpon>201903031248029_username3.cs</DependentUpon>
+    <Compile Include="Migrations\201903281529168_initIdentity.cs" />
+    <Compile Include="Migrations\201903281529168_initIdentity.Designer.cs">
+      <DependentUpon>201903281529168_initIdentity.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -76,14 +72,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201902241220208_initidentity.resx">
-      <DependentUpon>201902241220208_initidentity.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201903031248029_username3.resx">
-      <DependentUpon>201903031248029_username3.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj">
@@ -94,6 +82,11 @@
       <Project>{729E3F27-B404-4364-B2BF-84398B48E85F}</Project>
       <Name>DataAccess</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201903281529168_initIdentity.resx">
+      <DependentUpon>201903281529168_initIdentity.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

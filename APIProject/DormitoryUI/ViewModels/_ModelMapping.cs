@@ -363,6 +363,7 @@
                 Birthdate = viewModel.Birthdate,
                 Sex = viewModel.Sex,
                 Email = viewModel.Email,
+                Status = true
             };
 
         public Customer ConvertToModel(CustomerUpdateVM viewModel)

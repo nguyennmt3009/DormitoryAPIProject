@@ -52,11 +52,11 @@ namespace DormitoryUI.Controllers
 
                 foreach (var item in contracts)
                 {
-                    var owner = item.CustomerContracts.FirstOrDefault(z => z.IsOwner).Customer;
+                    var owner = item.CustomerContracts.FirstOrDefault(z => z.IsOwner);
 
                     contractList.Add(new
                     {
-                        ownerName = owner == null ? "Chưa có chủ phòng" : owner.Fullname,
+                        ownerName = owner == null ? "Chưa có chủ phòng" : owner.Customer.Fullname,
                         listCustomerName = item.CustomerContracts.Select(z => z.Customer.Fullname),
                         contractId = item.Id,   
                         createdDate = item.CreatedDate.ToString("dd/MM/yyyy"),
