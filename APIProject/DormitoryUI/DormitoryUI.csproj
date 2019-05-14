@@ -158,6 +158,7 @@
     <Compile Include="Controllers\ContractController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
+    <Compile Include="Controllers\HoangController.cs" />
     <Compile Include="Controllers\MobileController.cs" />
     <Compile Include="Controllers\ProblemReportController.cs" />
     <Compile Include="Controllers\RoomController.cs" />
