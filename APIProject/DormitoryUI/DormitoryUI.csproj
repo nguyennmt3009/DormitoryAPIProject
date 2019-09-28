@@ -188,6 +188,10 @@
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\apartmentpp - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\apartmentpp - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\apartmentppp - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\apartmentppp - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\newapartment - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\newapartment - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

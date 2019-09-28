@@ -37,9 +37,8 @@ namespace DormitoryUI
                 Provider = new CustomOAuthAuthorizationServerProvider(Kernel.Get<IEntityContext>()),
             });
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
-
-            app.UseCors(CorsOptions.AllowAll);
             #endregion
+            app.UseCors(CorsOptions.AllowAll);
 
             app.UseNinjectMiddleware(CreateKernel).UseNinjectWebApi(config);
         }
